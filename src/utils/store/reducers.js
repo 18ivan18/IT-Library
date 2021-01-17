@@ -1,4 +1,7 @@
-export const initialState = { auth: { isLoggedIn: false, user: null } };
+export const initialState = {
+  auth: { isLoggedIn: false, user: null },
+  resources: [],
+};
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -10,6 +13,9 @@ export const reducer = (state = initialState, action) => {
       break;
     case "LOGOUT":
       return { ...state, auth: { isLoggedIn: false } };
+      break;
+    case "SET_RESOURCES":
+      return { ...state, resources: action.payload.resources };
       break;
     default:
       return state;

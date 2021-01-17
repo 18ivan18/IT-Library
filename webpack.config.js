@@ -25,6 +25,10 @@ module.exports = (env) => {
             },
           },
         },
+        {
+          test: /\.ico$/,
+          loader: "file-loader",
+        },
       ],
     },
     optimization: {

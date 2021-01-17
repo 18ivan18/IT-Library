@@ -1,9 +1,16 @@
-import { bootstrap, decorateAsComponent, nextTick, Router } from "../utils";
+import {
+  bootstrap,
+  decorateAsComponent,
+  nextTick,
+  Router,
+  redirect,
+} from "../utils";
 import { Navbar, Footer } from "./index";
 import { html } from "lit-html";
 import { Home } from "./Home";
 import { Login } from "./Auth/Login";
 import { Library } from "./Library";
+import { Profile } from "./Profile";
 
 const appTemplate = (context) => html`
   <div>
@@ -17,6 +24,7 @@ const routes = [
   { path: "/", ctor: Home },
   { path: "/login", ctor: Login },
   { path: "/library", ctor: Library },
+  { path: "/profile", ctor: Profile },
 ];
 
 export class App extends HTMLElement {
@@ -27,6 +35,7 @@ export class App extends HTMLElement {
   }
 
   connectedCallback() {
+    // console.log("Init...");
     nextTick(() => {
       bootstrap(this.shadowRoot.getElementById("nav"), Navbar);
       bootstrap(this.shadowRoot.getElementById("footer"), Footer);
@@ -43,8 +52,7 @@ export class App extends HTMLElement {
     const target = e.composedPath()[0];
     if (target.nodeName === "A") {
       e.preventDefault();
-      history.pushState(null, "", target.href);
-      window.dispatchEvent(new HashChangeEvent("hashchange"));
+      redirect(target.href);
     }
   }
 

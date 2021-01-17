@@ -54,14 +54,13 @@ const navBarTemplate = (context) => html`
           <li>
             <div class="search"><img /></div>
           </li>
-          <li><a href="/signup">Sign Up</a></li>
-          <li><a href="/login">Log in</a></li>
           ${context.auth.isLoggedIn
-            ? html`<li>${context.auth.user.name}</li>
+            ? html`<li><a href="/profile">${context.auth.user.name}</a></li>
                 <li @click=${context.handleLogout.bind(context)}>
                   <button href="">Logout</button>
                 </li>`
-            : ""}
+            : html` <li><a href="/signup">Sign Up</a></li>
+                <li><a href="/login">Log in</a></li>`}
         </ul>
       </div>
     </nav>
