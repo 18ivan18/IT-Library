@@ -1,11 +1,9 @@
 import { html } from "lit-html";
 
-import { decorateAsComponent } from "../utils/decorate-as-component.js";
-import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
+import { decorateAsComponent, decorateAsStateProperty, parse } from "../utils/";
 
 import { Store } from "../utils/store/store";
 import { ifThen } from "../utils";
-import { config } from "../../config";
 
 const printResourcesInfo = (arrOfBooks) =>
   arrOfBooks.map(
@@ -55,8 +53,8 @@ const basicFormRender = (
     <label for="tags">Tags</label>
     <input type="text" id="tags" name="tags"/>
    </div>
-   <label for="property">Sort by:</label>
-    <select name="property" id="property" class="form-group">
+   <label for="sortBy">Sort by:</label>
+    <select name="sortBy" id="sortBy" class="form-group">
       <option value="author">Author</option>
       <option value="title">Title</option>
       <option value="date">Registration Date</option>
@@ -139,7 +137,7 @@ export class Library extends HTMLElement {
     // const query = Object.keys(data)
     //   .map((k) => esc(k) + "=" + esc(data[k]))
     //   .join("&");
-    fetch(config.api.url + "?" + new URLSearchParams(data))
+    fetch(parse("/", new URLSearchParams(data)))
       .then((data) => data.json())
       .then((resources) => {
         Store.dispatch({

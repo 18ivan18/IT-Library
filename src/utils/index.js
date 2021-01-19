@@ -6,3 +6,4 @@ export * from "./next-tick";
 export * from "./router";
 export * from "./history";
 export * from "./if-then";
+export * from "./createFileDest";

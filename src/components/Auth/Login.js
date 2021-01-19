@@ -1,10 +1,12 @@
 import { html } from "lit-html";
 
-import { decorateAsComponent } from "../../utils/decorate-as-component.js";
-import { decorateAsStateProperty } from "../../utils/decorate-as-state-property.js";
-import { redirect } from "../../utils/index.js";
+import {
+  decorateAsComponent,
+  decorateAsStateProperty,
+  parse,
+  redirect,
+} from "../../utils/";
 import { Store } from "../../utils/store/store";
-import { config } from "../../../config";
 
 const loginTemplate = (context) => html`
   <form @submit="${context.submitHandler}" id="login-form">
@@ -36,25 +38,18 @@ export class Login extends HTMLElement {
     const inputs = Array.from(
       this.shadowRoot.getElementById("login-form").getElementsByTagName("input")
     );
-    const data = inputs.reduce((acc, currInput) => {
-      let { value, name, type } = currInput;
-      if (type === "number") {
-        value = currInput.valueAsNumber;
-      } else if (type === "date") {
-        value = currInput.valueAsDate;
-      } else if (type === "checkbox") {
-        value = currInput.checked;
-      }
-      acc[name] = value;
-      return acc;
-    }, {});
+    let formData = new FormData();
+    for (const input of inputs) {
+      let { value, name } = input;
+      formData.append(name, value);
+    }
     // do login
-    fetch(config.api.url + "login/", {
+    fetch(parse("login"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: formData,
     })
       .then((resp) => resp.json())
       .then((resp) => {

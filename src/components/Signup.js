@@ -1,13 +1,16 @@
 import { html } from "lit-html";
 
-import { decorateAsComponent } from "../utils/decorate-as-component.js";
-import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
+import {
+  decorateAsComponent,
+  decorateAsStateProperty,
+  redirect,
+  parse,
+} from "../utils/";
 import { Store } from "../utils/store/store";
-import { redirect } from "../utils";
 
 const signupTemplate = (context) => {
   if (!Store.getState().auth.isLoggedIn) {
-    return html`<form id="register-form">
+    return html`<form id="register-form" @submit=${context.handleSubmit}>
       <div class="form-group">
         <label for="username">Username</label>
         <input id="username" value="" name="username" type="text" />
@@ -42,6 +45,40 @@ export class Signup extends HTMLElement {
 
     decorateAsStateProperty(this, "isLoading", false);
   }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const inputs = Array.from(
+      this.shadowRoot
+        .getElementById("register-form")
+        .getElementsByTagName("input")
+    );
+    let formData = new FormData();
+    for (const input of inputs) {
+      let { value, name } = input;
+      formData.append(name, value);
+    }
+    fetch(parse("signup"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: formData,
+    })
+      .then((resp) => resp.json())
+      .then((resp) => {
+        if (resp.success) {
+          Store.dispatch({
+            type: "LOGIN",
+            payload: {
+              user: resp.user,
+            },
+          });
+          redirect();
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 }
 
 customElements.define(Signup.selector, Signup);

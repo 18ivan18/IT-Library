@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+import { config } from "./config";
 
 module.exports = (env) => {
   const isProd = env.NODE_ENV === "prod";
@@ -45,7 +46,7 @@ module.exports = (env) => {
     devServer: {
       contentBase: path.join(__dirname, "dist"),
       compress: true,
-      port: env.PORT || 3000,
+      port: config.app.port,
       historyApiFallback: true,
     },
   };
