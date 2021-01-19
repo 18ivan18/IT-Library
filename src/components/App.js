@@ -11,7 +11,7 @@ import { Home } from "./Home";
 import { Login } from "./Auth/Login";
 import { Library } from "./Library";
 import { Profile } from "./Profile";
-import { Signup } from "./Signup";
+import { Signup } from "./Auth/Signup";
 import { UploadBooks } from "./UploadBooks";
 
 const appTemplate = (context) => html`

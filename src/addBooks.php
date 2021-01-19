@@ -5,8 +5,9 @@
 	header("Access-Control-Max-Age: 3600");
 	header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 	$username = $_POST["username"];
-	$firstName = $_POST["firstName"];
-	$lastName = $_POST["lastName"];
-	$password = $_POST["password"];
-	echo json_encode([$username, $firstName, $lastName, $password]);
+	$csv = $_FILES["csv"]['tmp_name'];
+	$myfile = fopen($csv, "r") or die("Unable to open file!");
+	$data = fread($myfile, filesize($csv));
+	fclose($myfile);
+	echo json_encode([$username, "data" => $data]);
 ?>

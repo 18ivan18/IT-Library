@@ -5,8 +5,8 @@ import {
   decorateAsStateProperty,
   redirect,
   parse,
-} from "../utils/";
-import { Store } from "../utils/store/store";
+} from "../../utils/";
+import { Store } from "../../utils/store/store";
 
 const signupTemplate = (context) => {
   if (!Store.getState().auth.isLoggedIn) {

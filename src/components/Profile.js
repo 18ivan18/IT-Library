@@ -28,6 +28,12 @@ export class Profile extends HTMLElement {
 
     decorateAsStateProperty(this, "isLoading", false);
     decorateAsStateProperty(this, "auth", Store.getState().auth);
+
+    Store.subscribe((action) => {
+      if (action.type === "LOGIN" || action.type === "LOGOUT") {
+        this.auth = Store.getState().auth;
+      }
+    });
   }
 }
 

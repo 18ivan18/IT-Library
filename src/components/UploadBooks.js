@@ -1,10 +1,8 @@
 import { html } from "lit-html";
 
-import { decorateAsComponent } from "../utils/decorate-as-component.js";
-import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
+import { decorateAsComponent, decorateAsStateProperty, parse } from "../utils/";
 import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
-import { config } from "./../../config";
 
 const uploadBooksTemplate = (context) => {
   if (Store.getState().auth.isLoggedIn) {
@@ -16,7 +14,7 @@ const uploadBooksTemplate = (context) => {
           value=""
           name="file"
           type="file"
-          accept="image/png, image/jpeg"
+          accept=".csv"
           multiple
         />
       </div>
@@ -44,8 +42,8 @@ export class UploadBooks extends HTMLElement {
     const fileField = this.shadowRoot.querySelector('input[type="file"]');
     formData.append("username", Store.getState().auth.user.username);
     formData.append("csv", fileField.files[0]);
-    fetch(config.api.url + "addBooks/", {
-      method: "PUT",
+    fetch(parse("addBooks"), {
+      method: "POST",
       body: formData,
     })
       .then((response) => response.json())
