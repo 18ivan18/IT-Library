@@ -16,17 +16,17 @@ const signupTemplate = (context) => {
         <input id="username" value="" name="username" type="text" />
       </div>
       <div class="form-group">
+        <label for="firstName">First name</label>
+        <input id="firstName" value="" name="firstName" type="text" />
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last name</label>
+        <input id="lastName" value="" name="lastName" type="text" />
+      </div>
+      <div class="form-group">
         <label for="password">Password</label>
         <input id="password" value="" name="password" type="password" />
       </div>
-      <div class="form-group">
-        <label for="repeatPassword">Repeat password</label>
-        <input
-          id="repeatPassword"
-          value=""
-          name="repeatPassword"
-          type="password"
-        />
       </div>
       <button>Register</button>
     </form>`;
@@ -60,9 +60,6 @@ export class Signup extends HTMLElement {
     }
     fetch(parse("signup"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: formData,
     })
       .then((resp) => resp.json())

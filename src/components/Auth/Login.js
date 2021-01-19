@@ -11,8 +11,8 @@ import { Store } from "../../utils/store/store";
 const loginTemplate = (context) => html`
   <form @submit="${context.submitHandler}" id="login-form">
     <div class="form-group">
-      <label for="email">Email:</label>
-      <input id="email" type="text" name="email" value="" />
+      <label for="username">Username:</label>
+      <input id="username" type="text" name="username" value="" />
     </div>
     <div class="form-group">
       <label for="password">Password:</label>
@@ -46,9 +46,6 @@ export class Login extends HTMLElement {
     // do login
     fetch(parse("login"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: formData,
     })
       .then((resp) => resp.json())

@@ -43,7 +43,7 @@ export class UploadBooks extends HTMLElement {
     const formData = new FormData();
     const fileField = this.shadowRoot.querySelector('input[type="file"]');
     formData.append("username", Store.getState().auth.user.username);
-    formData.append("avatar", fileField.files[0]);
+    formData.append("csv", fileField.files[0]);
     fetch(config.api.url + "addBooks/", {
       method: "PUT",
       body: formData,
