@@ -11,7 +11,8 @@ const profileTemplate = (context) => {
       <p>Username: ${context.auth.user.username}</p>
       <p>Phone: ${context.auth.user.phone}</p>
       <p>Email: ${context.auth.user.email}</p>
-      <p>Website: ${context.auth.user.website}</p>`;
+      <p>Website: ${context.auth.user.website}</p>
+      <button @click=${() => redirect("/import")}>Upload books</button>`;
   } else {
     redirect("/signup");
   }

@@ -22,12 +22,12 @@ const printResourcesInfo = (arrOfBooks) =>
           }
         </style>
         <div class="card-wrapper">
-          <div>Title: ${book.title}</div>
-          <div>Type: ${book.type}</div>
-          <div>Description: ${book.description}</div>
+          <div>Title: ${book.Title}</div>
+          <div>Type: ${book.Type}</div>
+          <div>Description: ${book.Description}</div>
 
-          ${book.available
-            ? html`<div>${book.count + " copies left"}</div>
+          ${book.Count > 0
+            ? html`<div>${book.Count + " copies left"}</div>
                 <button>Get it now</button>`
             : html`<div>Not available</div>`}
         </div>
@@ -135,11 +135,11 @@ export class Library extends HTMLElement {
       acc[name] = currInput.options[selectedIndex].value;
       return acc;
     }, data);
-    const esc = encodeURIComponent;
-    const query = Object.keys(data)
-      .map((k) => esc(k) + "=" + esc(data[k]))
-      .join("&");
-    fetch(config.api.url + "?" + query)
+    // const esc = encodeURIComponent;
+    // const query = Object.keys(data)
+    //   .map((k) => esc(k) + "=" + esc(data[k]))
+    //   .join("&");
+    fetch(config.api.url + "?" + new URLSearchParams(data))
       .then((data) => data.json())
       .then((resources) => {
         Store.dispatch({

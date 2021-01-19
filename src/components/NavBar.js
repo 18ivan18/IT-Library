@@ -88,14 +88,6 @@ export class Navbar extends HTMLElement {
       type: "LOGOUT",
     });
   };
-
-  componentClickHandler(e) {
-    if (e.target.tagName === "A") {
-      e.preventDefault();
-      history.pushState({}, "", e.target.pathname);
-      window.dispatchEvent(new HashChangeEvent("hashchange"));
-    }
-  }
 }
 
 customElements.define(Navbar.selector, Navbar);

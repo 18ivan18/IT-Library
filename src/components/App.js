@@ -11,6 +11,8 @@ import { Home } from "./Home";
 import { Login } from "./Auth/Login";
 import { Library } from "./Library";
 import { Profile } from "./Profile";
+import { Signup } from "./Signup";
+import { UploadBooks } from "./UploadBooks";
 
 const appTemplate = (context) => html`
   <div>
@@ -25,6 +27,8 @@ const routes = [
   { path: "/login", ctor: Login },
   { path: "/library", ctor: Library },
   { path: "/profile", ctor: Profile },
+  { path: "/signup", ctor: Signup },
+  { path: "/import", ctor: UploadBooks },
 ];
 
 export class App extends HTMLElement {
