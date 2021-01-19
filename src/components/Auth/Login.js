@@ -5,10 +5,12 @@ import {
   decorateAsStateProperty,
   parse,
   redirect,
+  ifThen,
 } from "../../utils/";
 import { Store } from "../../utils/store/store";
 
 const loginTemplate = (context) => html`
+  ${ifThen(context.isLoading, html`<h1>LOADING</h1>`)}
   <form @submit="${context.submitHandler}" id="login-form">
     <div class="form-group">
       <label for="username">Username:</label>
@@ -18,7 +20,7 @@ const loginTemplate = (context) => html`
       <label for="password">Password:</label>
       <input id="password" type="text" name="password" value="" />
     </div>
-    <button>Login</button>
+    <button ?disabled=${context.isLoading}>Login</button>
   </form>
 `;
 
@@ -35,6 +37,8 @@ export class Login extends HTMLElement {
 
   submitHandler = (e) => {
     e.preventDefault();
+    // validate
+    this.isLoading = true;
     const inputs = Array.from(
       this.shadowRoot.getElementById("login-form").getElementsByTagName("input")
     );
@@ -61,6 +65,8 @@ export class Login extends HTMLElement {
         }
       })
       .catch((err) => console.log(err));
+
+    this.isLoading = false;
   };
 }
 

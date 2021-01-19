@@ -14,7 +14,7 @@ const profileTemplate = (context) => {
       <p>Website: ${context.auth.user.website}</p>
       <button @click=${() => redirect("/import")}>Upload books</button>`;
   } else {
-    redirect("/signup");
+    redirect("/login");
   }
 };
 

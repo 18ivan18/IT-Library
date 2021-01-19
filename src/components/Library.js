@@ -68,10 +68,33 @@ const basicFormRender = (
 </form>`;
 
 const libraryTemplate = (context) => html`
+  <style>
+    .checked {
+      background-color: lightcoral;
+    }
+  </style>
   <h1>Library</h1>
   <div>
     <h4>Search</h4>
-    <button>Users</button><button>Paper</button><button>Book</button>
+    <button
+      name="users"
+      class=${context.type === "users" ? "checked" : "unchecked"}
+      @click=${context.handleButtonClick}
+    >
+      Users</button
+    ><button
+      name="paper"
+      class=${context.type === "paper" ? "checked" : "unchecked"}
+      @click=${context.handleButtonClick}
+    >
+      Paper</button
+    ><button
+      name="book"
+      class=${context.type === "book" ? "checked" : "unchecked"}
+      @click=${context.handleButtonClick}
+    >
+      Book
+    </button>
     ${basicFormRender(context.handleSubmit)}
     ${ifThen(context.isLoading, html`<h1>LOADING...</h1>`)}
     ${printResourcesInfo(context.resources)}
@@ -89,6 +112,7 @@ export class Library extends HTMLElement {
 
     decorateAsStateProperty(this, "isLoading", false);
     decorateAsStateProperty(this, "auth", Store.getState().auth);
+    decorateAsStateProperty(this, "type", "paper");
     decorateAsStateProperty(this, "resources", []);
     Store.subscribe((action) => {
       if (action.type === "LOGIN" || action.type === "LOGOUT") {
@@ -101,6 +125,10 @@ export class Library extends HTMLElement {
       }
     });
   }
+
+  handleButtonClick = (e) => {
+    this.type = e.target.name;
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
