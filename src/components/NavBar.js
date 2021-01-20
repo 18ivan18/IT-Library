@@ -6,62 +6,81 @@ import { Store } from "../utils/store/store";
 
 const navBarTemplate = (context) => html`
   <style>
-    li {
-      float: left;
-      height: 100%;
-    }
-
-    li a {
-      display: block;
-      color: white;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-      height: 100%;
-    }
-
-    li a:hover {
-      background-color: ${context.backgroundColor || "#111"};
-    }
-    header {
-      margin: 0;
-      width: 100%;
-    }
-    ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
+    nav {
       overflow: hidden;
-      background-color: ${context.color || "#333"};
-      height: 100%;
+      background-color: #e9e9e9;
     }
-    .nav-menu {
-      height: 10vh;
+
+    nav a {
+      float: left;
+      display: block;
+      color: black;
+      text-align: center;
+      padding: 22px 24px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+
+    nav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    nav a.active {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    nav .credentials-container {
+      float: right;
+    }
+
+    .image-container {
+      padding: 0 30px;
+    }
+
+    nav img {
+      height: 60px;
+      width: 60px;
+    }
+
+    a.btn {
+      vertical-align: middle;
+      padding: 0.35em 2.3em;
+      border: 0.05em solid #ffffff;
+      margin: 0 0.3em 0.3em 0;
+      border-radius: 0.12em;
+      box-sizing: border-box;
+      text-decoration: none;
+      font-family: "Roboto", sans-serif;
+      font-weight: 300;
+      background-color: transparent;
+      color: #111;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    a.btn:hover {
+      color: #000000;
+      background-color: #ffffff;
     }
   </style>
   <header>
     <nav>
-      <div class="nav-menu">
-        <ul class="menu">
-          <a href="#" id="logo">
-            <!-- <img src="https://cdn.logo.com/hotlink-ok/logo-social.png" alt=""/> -->
-          </a>
-          <li><a href="/">Home</a></li>
-          <li><a href="/browse">Books and People</a></li>
-          <li><a href="/library">Library</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contacs">Contact us</a></li>
-          <li>
-            <div class="search"><img /></div>
-          </li>
-          ${context.auth.isLoggedIn
-            ? html`<li><a href="/profile">${context.auth.user.name}</a></li>
-                <li @click=${context.handleLogout.bind(context)}>
-                  <button href="">Logout</button>
-                </li>`
-            : html` <li><a href="/signup">Sign Up</a></li>
-                <li><a href="/login">Log in</a></li>`}
-        </ul>
+      <a class="image-container" href="/"
+        ><img src="https://cdn.logo.com/hotlink-ok/logo-social-sq.png"
+      /></a>
+      <a href="/">Home</a>
+      <a href="/library">Books and People</a>
+      <a href="/statistics">Statistics</a>
+      <a href="/about">About</a>
+      <a href="/contacs">Contact us</a>
+      <div class="credentials-container">
+        ${context.auth.isLoggedIn
+          ? html`<a href="/profile">Hello, ${context.auth.user.name}</a>
+              <a class="btn" href="#" @click=${context.handleLogout}>Logout</button> `
+          : html` <a href="/signup">Sign Up</a>
+              <a href="/login">Log in</a>`}
       </div>
     </nav>
   </header>

@@ -13,9 +13,17 @@ import { Library } from "./Library";
 import { Profile } from "./Profile";
 import { Signup } from "./Auth/Signup";
 import { UploadBooks } from "./UploadBooks";
+import { Statistics } from "./Statistics";
 
 const appTemplate = (context) => html`
-  <div>
+  <style>
+    .body {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+  </style>
+  <div class="body">
     <div id="nav"></div>
     <div id="outlet"></div>
     <div id="footer"></div>
@@ -29,6 +37,7 @@ const routes = [
   { path: "/profile", ctor: Profile },
   { path: "/signup", ctor: Signup },
   { path: "/import", ctor: UploadBooks },
+  { path: "/statistics", ctor: Statistics },
 ];
 
 export class App extends HTMLElement {
