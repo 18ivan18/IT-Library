@@ -14,9 +14,42 @@ class database{
 			echo "cannot get db";
 		}
 	}
-	public function test($data){
-		$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=?");
-		$stmt->bind_param("s", $data);
+	public function getLibraryInfo($data){
+		$book = 'book';
+		$title = $data[0];
+		$titleExactMatch = $data[1];
+		$author = $data[2];
+		$authorExactMatch = $data[3];
+		$tag = $data[4];
+		$sortBy = $data[5];
+		$order = $data[6];
+		if ($titleExactMatch == 'true'){
+			if ($authorExactMatch == 'true'){
+				if($order == 'Descending'){
+					$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author = ? and Tags LIKE CONCAT ( '%' , ?, '%') ORDER BY ? DESC");
+				}
+				else{
+				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author = ? and Tags LIKE CONCAT ( '%' , ?, '%') ORDER BY ?");
+				}
+			}
+			else{
+				if ($order == 'Descending'){
+					$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') ORDER BY ? DESC");
+				}
+				else{
+					$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') ORDER BY ?");
+				}
+			}
+		}
+		else{
+			if ($order == 'Descending'){
+				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title LIKE CONCAT('%',?,'%') and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') ORDER BY ? DESC");
+			}
+			else{
+				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title LIKE CONCAT('%',?,'%') and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') ORDER BY ?");
+			}
+		}
+		$stmt->bind_param("ssss", $title, $author, $tag, $sortBy);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$JSONArray = array();
