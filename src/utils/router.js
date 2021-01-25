@@ -28,9 +28,11 @@ export class Router {
   startListening = () => {
     this.route();
     window.addEventListener("navigate", this.route);
+    window.addEventListener("popstate", this.route);
   };
 
   stopListening = () => {
     window.removeEventListener("navigate", this.route);
+    window.removeEventListener("popstate", this.route);
   };
 }

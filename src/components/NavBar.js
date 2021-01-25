@@ -44,27 +44,6 @@ const navBarTemplate = (context) => html`
       height: 60px;
       width: 60px;
     }
-
-    a.btn {
-      vertical-align: middle;
-      padding: 0.35em 2.3em;
-      border: 0.05em solid #ffffff;
-      margin: 0 0.3em 0.3em 0;
-      border-radius: 0.12em;
-      box-sizing: border-box;
-      text-decoration: none;
-      font-family: "Roboto", sans-serif;
-      font-weight: 300;
-      background-color: transparent;
-      color: #111;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    a.btn:hover {
-      color: #000000;
-      background-color: #ffffff;
-    }
   </style>
   <header>
     <nav>
@@ -79,7 +58,7 @@ const navBarTemplate = (context) => html`
       <div class="credentials-container">
         ${context.auth.isLoggedIn
           ? html`<a href="/profile" is="nav-anchor">Hello, ${context.auth.user.name}</a>
-              <a class="btn" href="#" @click=${context.handleLogout} is="nav-anchor">Logout</button> `
+              <a href="/" @click=${context.handleLogout} is="nav-anchor">Logout</button> `
           : html` <a href="/signup" is="nav-anchor">Sign Up</a>
               <a href="/login" is="nav-anchor">Log in</a>`}
       </div>
@@ -104,6 +83,7 @@ export class Navbar extends HTMLElement {
   }
 
   handleLogout = (e) => {
+    // TODO: fetch to the api
     Store.dispatch({
       type: "LOGOUT",
     });
