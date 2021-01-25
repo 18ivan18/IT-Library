@@ -26,12 +26,11 @@ export class Router {
     undefined;
 
   startListening = () => {
-    window.addEventListener("hashchange", this.route);
-    window.addEventListener("load", this.route);
+    this.route();
+    window.addEventListener("navigate", this.route);
   };
 
   stopListening = () => {
-    window.removeEventListener("hashchange", this.route);
-    window.removeEventListener("load", this.route);
+    window.removeEventListener("navigate", this.route);
   };
 }

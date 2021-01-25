@@ -3,6 +3,7 @@ import { html } from "lit-html";
 import { decorateAsComponent } from "../utils/decorate-as-component.js";
 import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
 import { Store } from "../utils/store/store";
+import { NavAnchor } from "../components/CustomElements/NavAnchor";
 
 const navBarTemplate = (context) => html`
   <style>
@@ -67,20 +68,20 @@ const navBarTemplate = (context) => html`
   </style>
   <header>
     <nav>
-      <a class="image-container" href="/"
+      <a class="image-container" href="/" is="nav-anchor"
         ><img src="https://cdn.logo.com/hotlink-ok/logo-social-sq.png"
       /></a>
-      <a href="/">Home</a>
-      <a href="/library">Books and People</a>
-      <a href="/statistics">Statistics</a>
-      <a href="/about">About</a>
-      <a href="/contacs">Contact us</a>
+      <a href="/" is="nav-anchor">Home</a>
+      <a href="/library" is="nav-anchor">Books and People</a>
+      <a href="/statistics" is="nav-anchor">Statistics</a>
+      <a href="/about" is="nav-anchor">About</a>
+      <a href="/contacs" is="nav-anchor">Contact us</a>
       <div class="credentials-container">
         ${context.auth.isLoggedIn
-          ? html`<a href="/profile">Hello, ${context.auth.user.name}</a>
-              <a class="btn" href="#" @click=${context.handleLogout}>Logout</button> `
-          : html` <a href="/signup">Sign Up</a>
-              <a href="/login">Log in</a>`}
+          ? html`<a href="/profile" is="nav-anchor">Hello, ${context.auth.user.name}</a>
+              <a class="btn" href="#" @click=${context.handleLogout} is="nav-anchor">Logout</button> `
+          : html` <a href="/signup" is="nav-anchor">Sign Up</a>
+              <a href="/login" is="nav-anchor">Log in</a>`}
       </div>
     </nav>
   </header>

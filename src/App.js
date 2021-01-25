@@ -1,21 +1,18 @@
+import { bootstrap, decorateAsComponent, nextTick, Router } from "./utils";
 import {
-  bootstrap,
-  decorateAsComponent,
-  nextTick,
-  Router,
-  redirect,
-} from "../utils";
-import { Navbar, Footer } from "./index";
+  Navbar,
+  Footer,
+  Home,
+  Login,
+  Library,
+  Profile,
+  Signup,
+  UploadBooks,
+  Statistics,
+} from "./components";
 import { html } from "lit-html";
-import { Home } from "./Home";
-import { Login } from "./Auth/Login";
-import { Library } from "./Library";
-import { Profile } from "./Profile";
-import { Signup } from "./Auth/Signup";
-import { UploadBooks } from "./UploadBooks";
-import { Statistics } from "./Statistics";
 
-const appTemplate = (context) => html`
+const appTemplate = () => html`
   <style>
     .body {
       min-height: 100vh;
@@ -48,7 +45,6 @@ export class App extends HTMLElement {
   }
 
   connectedCallback() {
-    // console.log("Init...");
     nextTick(() => {
       bootstrap(this.shadowRoot.getElementById("nav"), Navbar);
       bootstrap(this.shadowRoot.getElementById("footer"), Footer);
@@ -57,21 +53,11 @@ export class App extends HTMLElement {
         routes
       );
       this.Router.startListening();
-      window.addEventListener("click", this.componentClickHandler);
     });
-  }
-
-  componentClickHandler(e) {
-    const target = e.composedPath()[0];
-    if (target.nodeName === "A") {
-      e.preventDefault();
-      redirect(target.href);
-    }
   }
 
   disconnectedCallback() {
     this.Router.stopListening();
-    window.removeEventListener("click", this.componentClickHandler);
   }
 }
 

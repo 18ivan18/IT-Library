@@ -1,7 +1,7 @@
 export const redirect = (path = "/") => {
   if (path === getCurrentURL()) return;
   history.pushState(null, "", path);
-  window.dispatchEvent(new HashChangeEvent("hashchange"));
+  window.dispatchEvent(new Event("navigate"));
 };
 
 export const getCurrentURL = () => {
