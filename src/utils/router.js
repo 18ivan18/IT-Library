@@ -9,7 +9,6 @@ export class Router {
   }
 
   route = () => {
-    console.log("routing");
     const path = this.parseLocation();
     const component = this.findComponentByPath(path) || { ctor: NotFound };
     bootstrap(this.outlet, component.ctor, component.args);

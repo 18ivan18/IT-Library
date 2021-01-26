@@ -1,9 +1,35 @@
 import { html } from "lit-html";
 
-import { decorateAsComponent } from "../utils/decorate-as-component.js";
-import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
+import {
+  decorateAsComponent,
+  decorateAsStateProperty,
+  ifThen,
+  isLate,
+} from "../utils";
 import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
+
+const bookHistoryTemplate = (book) => {
+  if (!book.dateReturned) {
+    if (isLate(book.dateTaken, book.daysToBeHeld)) {
+      return html`<p>You are late! Return ${book.name} as soon as possible</p>`;
+    } else {
+      const dateTaken = new Date(book.dateTaken);
+      return html`<a href="/books/${book.id}" is="nav-anchor">${book.name}</a>
+        can still be read until
+        ${new Date(+dateTaken + book.daysToBeHeld * 24 * 60 * 60 * 1000)}`;
+    }
+  } else {
+    return html`
+      <p>
+        You took
+        ${html`<a href="/books/${book.id}" is="nav-anchor">${book.name}</a>`} on
+        the ${Date(book.dateTaken).toLocaleString()} and returned it on the
+        ${Date(book.dateReturned).toLocaleString()}. You can no longer read it.
+      </p>
+    `;
+  }
+};
 
 const profileTemplate = (context) => {
   if (context.auth.isLoggedIn) {
@@ -78,10 +104,7 @@ const profileTemplate = (context) => {
           </div>
         </div>
         <div class="book-history">
-          <p>
-            You took Harry potter on the 1st of september and returned it on the
-            31st of september
-          </p>
+          ${context.auth.user.history.map((book) => bookHistoryTemplate(book))}
         </div>
       </div>
     `;
