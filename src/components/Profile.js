@@ -9,39 +9,61 @@ import {
 import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
 
-const bookHistoryTemplate = (book) => {
-  if (!book.dateReturned) {
-    if (isLate(book.dateTaken, book.daysToBeHeld)) {
-      return html`<p>You are late! Return ${book.name} as soon as possible</p>`;
-    } else {
-      const dateTaken = new Date(book.dateTaken);
-      return html`<a href="/books/${book.id}" is="nav-anchor">${book.name}</a>
-        can still be read until
-        ${new Date(+dateTaken + book.daysToBeHeld * 24 * 60 * 60 * 1000)}`;
-    }
-  } else {
-    return html`
-      <p>
-        You took
-        ${html`<a href="/books/${book.id}" is="nav-anchor">${book.name}</a>`} on
-        the ${Date(book.dateTaken).toLocaleString()} and returned it on the
-        ${Date(book.dateReturned).toLocaleString()}. You can no longer read it.
-      </p>
-    `;
-  }
-};
+// TODO: Format the dates
+const bookHistoryTemplate = (book) => html`<div class="title">
+    <img src=${book.coverURL} alt="book cover image" />
+    <a href="/books/${book.id}" is="nav-anchor">${book.name}</a>
+  </div>
+  <div class="author">
+    <a is="nav-anchor" href="/">${book.author}</a>
+  </div>
+  ${ifThen(
+    book.dateReturned,
+    html` <p class="history-info">
+      You took on the ${Date(book.dateTaken).toLocaleString()} and returned it
+      on the ${Date(book.dateReturned).toLocaleString()}. You can no longer read
+      it.
+    </p>`
+  )}
+  ${ifThen(
+    !book.dateReturned && isLate(book.dateTaken, book.daysToBeHeld),
+    html`<p class="history-info late">
+      You are late! You should've returned the book at
+      ${new Date(
+        +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
+      )}.
+      Return ${book.name} as soon as possible.
+
+      <button>Return the book!</button>
+    </p>`
+  )}
+  ${ifThen(
+    !book.dateReturned && !isLate(book.dateTaken, book.daysToBeHeld),
+    html`<div class="history-info">
+      ${book.name} can still be read until
+      ${new Date(
+        +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
+      )}
+      <button>Read now!</button>
+      <button>Return the book!</button>
+    </div>`
+  )}`;
 
 const profileTemplate = (context) => {
   if (context.auth.isLoggedIn) {
     return html`
       <style>
+        .late {
+          color: red;
+        }
         .personal-info {
           background: white;
           display: flex;
           justify-content: flex-start;
           flex-direction: column;
         }
-        .personal-info h3 {
+        .personal-info h3,
+        .th {
           text-align: center;
           text-transform: uppercase;
         }
@@ -67,6 +89,13 @@ const profileTemplate = (context) => {
         }
         .book-history {
           background: white;
+          height: 100%;
+          display: grid;
+          grid-template-rows: 20px auto;
+          grid-template-columns: 1fr 1fr 2fr;
+          height: 79vh;
+          overflow-y: scroll;
+          grid-row-gap: 30px;
         }
         .info {
           margin-top: 4%;
@@ -77,6 +106,24 @@ const profileTemplate = (context) => {
         .info p {
           padding: 10px 15%;
           margin: 0;
+        }
+
+        .title {
+          display: flex;
+          justify-content: middle;
+        }
+
+        .title a,
+        .author,
+        .history-info {
+          text-align: center;
+          margin: 0;
+          margin: auto;
+        }
+
+        .title img {
+          width: 100px;
+          height: 150px;
         }
       </style>
       <div class="container">
@@ -104,6 +151,9 @@ const profileTemplate = (context) => {
           </div>
         </div>
         <div class="book-history">
+          <h3 class="th">Title</h3>
+          <h3 class="th">Author</h3>
+          <h3 class="th">Info</h3>
           ${context.auth.user.history.map((book) => bookHistoryTemplate(book))}
         </div>
       </div>

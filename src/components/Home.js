@@ -5,7 +5,7 @@ import { decorateAsComponent } from "../utils/";
 const homePageTemplate = (context) => html`
   <style>
     section {
-      background-image: url(https://png.pngtree.com/thumb_back/fh260/background/20190223/ourmid/pngtree-black-minimalist-atmospheric-wooden-background-backgroundwooden-backgroundtree-texture-image_77053.jpg);
+      background-image: url(https://accomplishonline.com/wp-content/uploads/2019/06/cropped-homepage1-1.png);
       background-size: 100% 100%;
       background-position: center;
       background-repeat: no-repeat;

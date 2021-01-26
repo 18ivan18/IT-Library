@@ -10,50 +10,148 @@ const printResourcesInfo = (arrOfBooks) =>
     (book) =>
       html`
         <style>
-          .card-wrapper {
-            background-color: #12aa12;
-            border: 2px solid black;
-            display: flex;
+          .card {
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-rows: 190px 190px 80px;
+            grid-template-areas: "image" "text" "stats";
+            font-family: "Roboto", sans-serif;
+            border-radius: 18px;
+            background: white;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            transition: 0.5s;
+            cursor: pointer;
           }
-          div {
-            margin: 10px;
+          .card:hover {
+            transform: scale(1.1);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
+          }
+          .card-image {
+            grid-area: image;
+            background: url(${book.coverURL});
+            background-size: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+          }
+          .card-text {
+            grid-area: text;
+            margin: 5%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .card-text span {
+            color: rgb(255, 7, 110);
+            font-size: 14px;
+          }
+          .card-text p {
+            color: gray;
+            font-size: 15px;
+            font-weight: 300;
+          }
+          .card-text h2 {
+            margin-top: 0;
+            font-size: 18px;
+          }
+          .card-stats {
+            grid-area: stats;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            background: rgb(255, 7, 110);
+          }
+          .card-stats .stat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 10px;
+            color: white;
+          }
+          .card-stats .type {
+            font-size: 11px;
+            font-weight: 300;
+            text-transform: uppercase;
+          }
+
+          .card-stats .value {
+            font-size: 22px;
+            font-weight: 500;
+          }
+
+          .card-stats .border {
+            border-left: 1px solid rgb(172, 26, 87);
+            border-right: 1px solid rgb(172, 26, 87);
+          }
+
+          .details {
+            transition: background-color 0.3s ease-in;
+            border-bottom-right-radius: 15px;
+          }
+
+          .details:hover {
+            background: rgb(172, 26, 87);
+            border-bottom-right-radius: 15px;
           }
         </style>
-        <div class="card-wrapper">
-          <div>Title: ${book.Title}</div>
-          <div>Type: ${book.Type}</div>
-          <div>Description: ${book.Description}</div>
-
-          ${book.Count > 0
-            ? html`<div>${book.Count + " copies left"}</div>
-                <button>Get it now</button>`
-            : html`<div>Not available</div>`}
+        <div class="card">
+          <div class="card-image"></div>
+          <div class="card-text">
+            <span>${book.author}</span>
+            <h2>${book.title}</h2>
+            <p>${book.description}</p>
+          </div>
+          <div class="card-stats">
+            <div class="stat">
+              <div class="value">
+                ${book.count > 0
+                  ? html`<div>${book.count}</div>`
+                  : html`<div>Not</div>`}
+              </div>
+              <div class="type">
+                ${book.count > 0
+                  ? html`<div>${"copies left"}</div>`
+                  : html`<div>available</div>`}
+              </div>
+            </div>
+            <div class="stat border">
+              <div class="value">${book.type}</div>
+              <div class="type"></div>
+            </div>
+            <div class="stat details">
+              <div class="value">
+                ${book.count > 0 ? html`<div>Get</div>` : html`<div>More</div>`}
+              </div>
+              <div class="type">
+                ${book.count > 0
+                  ? html`<div>now</div>`
+                  : html`<div>details</div>`}
+              </div>
+            </div>
+          </div>
         </div>
       `
   );
 
-const basicFormRender = (
-  handleSubmit
-) => html` <form id="search-form" @submit=${handleSubmit}>
+const basicFormRender = (handleSubmit) => html` 
+  <form id="search-form" @submit=${handleSubmit}>
   <div class="form-group" >
-    <label for="title">Title</label>
-    <input type="text" id="title" name="title"/>
+    <input type="text" id="title" name="title" placeholder="Title" autocomplete="off"/>
     <span>
       <input type="checkbox" name="titleExactMatch"> Exact Match only
     </span>
   </div>
-    <div class="form-group">
-    <label for="author">Author</label>
-    <input type="text" id="author" name="author"/>
+  <div class="form-group">
+    <input type="text" id="author" name="author" placeholder="Autor" autocomplete="off"/>
     <span>
       <input type="checkbox" name="authorExactMatch"> Exact Match only
     </span>
    </div>
     <div class="form-group">
-    <label for="tag">Tag</label>
-    <input type="text" id="tag" name="tag"/>
+    <input type="text" id="tag" name="tag" placeholder="Tag" autocomplete="off"/>
    </div>
-   <label for="sortBy">Sort by:</label>
     <select name="sortBy" id="sortBy" class="form-group">
       <option value="author">Author</option>
       <option value="title">Title</option>
@@ -63,7 +161,7 @@ const basicFormRender = (
       <option value="asc">Ascending</option>
       <option value="desc">Descending</option>
     </select>
-    <button>Search</button>
+    <button id="search">Search</button>
   </div>
 </form>`;
 
@@ -72,33 +170,143 @@ const libraryTemplate = (context) => html`
     .checked {
       background-color: lightcoral;
     }
+    .container {
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+      align-items: center;
+      width: 80vw;
+      height: 60vh;
+      border: 1px #eee solid;
+      background: lightgray;
+      z-index: 5;
+    }
+
+    .header {
+      font-size: 9vw;
+      position: absolute;
+      transform: rotate(-40deg);
+      opacity: 15%;
+      letter-spacing: 0.2em;
+      left: -3%;
+      top: 14%;
+      user-select: none;
+      z-index: 0;
+    }
+
+    #search-form {
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding: 24px;
+    }
+
+    input[type="text"],
+    select {
+      box-sizing: border-box;
+      height: 38px;
+      width: 360px;
+      margin: 8px;
+      border: solid 2px #bbc9ba;
+      font-size: 14px;
+      color: #757575;
+      padding: 8px;
+    }
+
+    input:hover,
+    select:hover {
+      border: solid 2px #79a06b;
+    }
+
+    #search {
+      background-color: #cfe7d9;
+      color: #558d3d;
+      border: solid 2px #bbc9ba;
+      height: 30px;
+      margin-top: 2%;
+      margin-left: 8px;
+      width: 360px;
+    }
+
+    #search:hover {
+      background-color: #558d3d;
+      color: #cfe7d9;
+      border: solid 2px #cfe7d9;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .search h4 {
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    button {
+      display: inline-block;
+      padding: 0.35em 2.3em;
+      border: 0.05em solid #ffffff;
+      margin: 0 0.3em 0.3em 0;
+      border-radius: 0.12em;
+      box-sizing: border-box;
+      text-decoration: none;
+      font-family: "Roboto", sans-serif;
+      font-weight: 300;
+      background-color: transparent;
+      color: #ffffff;
+      text-align: center;
+      transition: all 0.2s;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #000000;
+      background-color: #ffffff;
+    }
+    .card-container {
+      display: grid;
+      width: 80%;
+      margin: 3% auto;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 3%;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
-  <h1>Library</h1>
-  <div>
-    <h4>Search</h4>
-    <button
-      name="book"
-      class=${context.type === "book" ? "checked" : "unchecked"}
-      @click=${context.handleButtonClick}
-    >
-      Book</button
-    ><button
-      name="paper"
-      class=${context.type === "paper" ? "checked" : "unchecked"}
-      @click=${context.handleButtonClick}
-    >
-      Paper</button
-    ><button
-      name="magazine"
-      class=${context.type === "magazine" ? "checked" : "unchecked"}
-      @click=${context.handleButtonClick}
-    >
-      Magazine
-    </button>
-    ${basicFormRender(context.handleSubmit)}
-    ${ifThen(context.isLoading, html`<h1>LOADING...</h1>`)}
-    ${printResourcesInfo(context.resources)}
+  <h1 class="header">Library</h1>
+  <div class="container">
+    <div class="search">
+      <h4>Search your favourite books</h4>
+      <div class="buttons">
+        <button
+          name="book"
+          class=${context.type === "book" ? "checked" : "unchecked"}
+          @click=${context.handleButtonClick}
+        >
+          Book</button
+        ><button
+          name="paper"
+          class=${context.type === "paper" ? "checked" : "unchecked"}
+          @click=${context.handleButtonClick}
+        >
+          Paper</button
+        ><button
+          name="magazine"
+          class=${context.type === "magazine" ? "checked" : "unchecked"}
+          @click=${context.handleButtonClick}
+        >
+          Magazine
+        </button>
+      </div>
+      ${basicFormRender(context.handleSubmit)}
+      ${ifThen(context.isLoading, html`<h1>LOADING...</h1>`)}
+    </div>
   </div>
+  <div class="card-container">${printResourcesInfo(context.resources)}</div>
 `;
 
 export class Library extends HTMLElement {
@@ -127,7 +335,11 @@ export class Library extends HTMLElement {
   }
 
   handleButtonClick = (e) => {
-    this.type = e.target.name;
+    if (this.type === e.target.name) {
+      this.type = "";
+    } else {
+      this.type = e.target.name;
+    }
   };
 
   handleSubmit = (e) => {
@@ -161,6 +373,7 @@ export class Library extends HTMLElement {
       acc[name] = currInput.options[selectedIndex].value;
       return acc;
     }, data);
+    data.type = this.type;
     // const esc = encodeURIComponent;
     // const query = Object.keys(data)
     //   .map((k) => esc(k) + "=" + esc(data[k]))
