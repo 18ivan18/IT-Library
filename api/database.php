@@ -15,7 +15,6 @@ class database{
 		}
 	}
 	public function getLibraryInfo($data){
-		$book = 'book';
 		$title = $data[0];
 		$titleExactMatch = $data[1];
 		$author = $data[2];
@@ -58,15 +57,27 @@ class database{
 				$JSONArray[] = $row;
 			}
 		}
-		header("Access-Control-Allow-Origin: *");
-		header("Content-Type: application/json; charset=UTF-8");
-		header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
-		header("Access-Control-Max-Age: 3600");
-		header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-		echo json_encode($JSONArray);
-		#if (!mysqli_query($this->connection, $sql)){
-			#echo "couldn't insert";
-		#}
+		return json_encode($JSONArray);
+	}
+	public function loginCheck($data){
+		$username = $data[0];
+		$password = $data[1];
+		$stmt = $this->connection->prepare("SELECT * FROM users WHERE username = ? and password = ?");
+		$stmt->bind_param("ss", $username, $password);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		if($result->num_rows > 0){
+			return ["success" => true];
+		}
+		else{
+			return ["success" => false, "message" => 'Invalid username or password'];
+		}
+	}
+	public function registerCheck($data){
+		$username = $data[0];
+		$password = $data[1];
+		$firstname = $data[2];
+		$secondname = $data[3];
 	}
 }
 ?>

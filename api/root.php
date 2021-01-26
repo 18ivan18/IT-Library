@@ -14,6 +14,7 @@
 	$sortBy = $_GET['sortBy'];
 	$order = $_GET['order'];
 	$data = array($title,$titleExactMatch,$author,$authorExactMatch,$tag,$sortBy,$order);
-	$db->getLibraryInfo($data);
+	$result = $db->getLibraryInfo($data);
+	echo $result;
 	
 ?>
