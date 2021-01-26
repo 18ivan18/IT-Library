@@ -50,8 +50,8 @@ const basicFormRender = (
     </span>
    </div>
     <div class="form-group">
-    <label for="tags">Tags</label>
-    <input type="text" id="tags" name="tags"/>
+    <label for="tag">Tag</label>
+    <input type="text" id="tag" name="tag"/>
    </div>
    <label for="sortBy">Sort by:</label>
     <select name="sortBy" id="sortBy" class="form-group">
@@ -77,11 +77,11 @@ const libraryTemplate = (context) => html`
   <div>
     <h4>Search</h4>
     <button
-      name="users"
-      class=${context.type === "users" ? "checked" : "unchecked"}
+      name="book"
+      class=${context.type === "book" ? "checked" : "unchecked"}
       @click=${context.handleButtonClick}
     >
-      Users</button
+      Book</button
     ><button
       name="paper"
       class=${context.type === "paper" ? "checked" : "unchecked"}
@@ -89,11 +89,11 @@ const libraryTemplate = (context) => html`
     >
       Paper</button
     ><button
-      name="book"
-      class=${context.type === "book" ? "checked" : "unchecked"}
+      name="magazine"
+      class=${context.type === "magazine" ? "checked" : "unchecked"}
       @click=${context.handleButtonClick}
     >
-      Book
+      Magazine
     </button>
     ${basicFormRender(context.handleSubmit)}
     ${ifThen(context.isLoading, html`<h1>LOADING...</h1>`)}
