@@ -37,6 +37,8 @@ function getRouteParams(url) {
 }
 
 export const isLate = (date, daysToBeHeld) => {
+  if (!date) return false;
+  if (!daysToBeHeld) return false;
   const takenDate = new Date(date);
   const returnDate = daysToBeHeld * 24 * 60 * 60 * 1000 + +takenDate;
   const now = new Date();
