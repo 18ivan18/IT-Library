@@ -335,7 +335,11 @@ export class Library extends HTMLElement {
   }
 
   handleButtonClick = (e) => {
-    this.type = e.target.name;
+    if (this.type === e.target.name) {
+      this.type = "";
+    } else {
+      this.type = e.target.name;
+    }
   };
 
   handleSubmit = (e) => {
@@ -369,6 +373,7 @@ export class Library extends HTMLElement {
       acc[name] = currInput.options[selectedIndex].value;
       return acc;
     }, data);
+    data.type = this.type;
     // const esc = encodeURIComponent;
     // const query = Object.keys(data)
     //   .map((k) => esc(k) + "=" + esc(data[k]))
