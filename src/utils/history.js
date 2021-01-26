@@ -8,14 +8,14 @@ export const getCurrentURL = () => {
   return window.location.href;
 };
 
-function getRouteParams(url) {
-  var argsVal,
+export const getRouteParams = (url) => {
+  let argsVal,
     argsNames,
     params = {};
 
-  for (var x = 0; x < routes.length; x++) {
-    var currRoute = routes[x].url;
-    var routeMatcher = new RegExp(currRoute.replace(/(:\w+)/g, "([\\w-]+)"));
+  for (let x = 0; x < routes.length; x++) {
+    const currRoute = routes[x].url;
+    const routeMatcher = new RegExp(currRoute.replace(/(:\w+)/g, "([\\w-]+)"));
     argsVal = url.match(routeMatcher);
 
     if (argsVal) {
@@ -23,7 +23,7 @@ function getRouteParams(url) {
       argsNames = currRoute.match(/(:\w+)/g);
 
       if (argsNames) {
-        for (var y = 0; y < argsNames.length; y++) {
+        for (let y = 0; y < argsNames.length; y++) {
           params[argsNames[y].slice(1)] = argsVal[y];
         }
       }
@@ -34,7 +34,7 @@ function getRouteParams(url) {
     }
   }
   return null;
-}
+};
 
 export const isLate = (date, daysToBeHeld) => {
   if (!date) return false;

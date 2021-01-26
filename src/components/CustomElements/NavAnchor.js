@@ -4,7 +4,9 @@ export class NavAnchor extends HTMLAnchorElement {
   connectedCallback() {
     this.addEventListener("click", (e) => {
       e.preventDefault();
-      redirect(this.href);
+      if (!this.href.match(/#$/)) {
+        redirect(this.href);
+      }
     });
   }
 }

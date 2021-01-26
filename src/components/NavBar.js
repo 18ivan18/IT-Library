@@ -44,6 +44,27 @@ const navBarTemplate = (context) => html`
       height: 60px;
       width: 60px;
     }
+
+    #form-search {
+      width: 10px;
+      height: 10px;
+    }
+
+    form {
+      float: left;
+      display: block;
+      color: black;
+      text-align: center;
+      padding: 18.5px 20.5px;
+    }
+
+    input[type="text"] {
+      outline: none;
+      border-radius: 25px;
+      border: none;
+      width: 200px;
+      height: 25px;
+    }
   </style>
   <header>
     <nav>
@@ -55,6 +76,16 @@ const navBarTemplate = (context) => html`
       <a href="/statistics" is="nav-anchor">Statistics</a>
       <a href="/about" is="nav-anchor">About</a>
       <a href="/contacs" is="nav-anchor">Contact us</a>
+      <form @submit=${context.handleSubmit}>
+        <input type="text" placeholder="Search.." name="search" />
+        <button type="submit">
+          <img
+            src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/search-512.png"
+            alt="search"
+            id="form-search"
+          />
+        </button>
+      </form>
       <div class="credentials-container">
         ${context.auth.isLoggedIn
           ? html`<a href="/profile" is="nav-anchor">Hello, ${context.auth.user.name}</a>
@@ -87,6 +118,11 @@ export class Navbar extends HTMLElement {
     Store.dispatch({
       type: "LOGOUT",
     });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("searched...");
   };
 }
 
