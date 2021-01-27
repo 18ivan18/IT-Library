@@ -13,7 +13,8 @@
 	$tag = $_GET['tag'];
 	$sortBy = $_GET['sortBy'];
 	$order = $_GET['order'];
-	$data = array($title,$titleExactMatch,$author,$authorExactMatch,$tag,$sortBy,$order);
+	$type = $_GET['type'];
+	$data = array($title,$titleExactMatch,$author,$authorExactMatch,$tag,$sortBy,$order,$type);
 	$result = $db->getLibraryInfo($data);
 	echo $result;
 	
