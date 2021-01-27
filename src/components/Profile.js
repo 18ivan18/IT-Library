@@ -5,6 +5,7 @@ import {
   decorateAsStateProperty,
   ifThen,
   isLate,
+  parse,
 } from "../utils";
 import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
@@ -184,7 +185,7 @@ const profileTemplate = (context) => {
           <h3 class="th">Title</h3>
           <h3 class="th">Author</h3>
           <h3 class="th">Info</h3>
-          ${context.auth.user.history.map((book) => bookHistoryTemplate(book))}
+          ${context.history.map((book) => bookHistoryTemplate(book))}
         </div>
       </div>
     `;
@@ -203,12 +204,22 @@ export class Profile extends HTMLElement {
 
     decorateAsStateProperty(this, "isLoading", false);
     decorateAsStateProperty(this, "auth", Store.getState().auth);
+    decorateAsStateProperty(this, "history", []);
 
     Store.subscribe((action) => {
       if (action.type === "LOGIN" || action.type === "LOGOUT") {
         this.auth = Store.getState().auth;
       }
     });
+  }
+
+  connectedCallback() {
+    fetch(parse("history"))
+      .then((resp) => resp.json())
+      .then((json) => {
+        this.history = json;
+      })
+      .catch(console.log);
   }
 }
 
