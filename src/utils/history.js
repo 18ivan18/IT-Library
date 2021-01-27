@@ -44,3 +44,11 @@ export const isLate = (date, daysToBeHeld) => {
   const now = new Date();
   return now > returnDate;
 };
+
+export const scroll = () => {
+  window.scrollTo({
+    top: 100,
+    left: 100,
+    behavior: "smooth",
+  });
+};

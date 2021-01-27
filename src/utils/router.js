@@ -1,6 +1,5 @@
 import { bootstrap } from ".";
 import { NotFound } from "../components/";
-import { getCurrentURL } from "./history";
 
 export class Router {
   constructor(outlet, routes) {
@@ -11,7 +10,7 @@ export class Router {
   route = () => {
     const path = this.parseLocation();
     const component = this.findComponentByPath(path) || { ctor: NotFound };
-    bootstrap(this.outlet, component.ctor, component.args);
+    bootstrap(this.outlet, component.ctor, component.params);
   };
 
   SetRoutes = (routes) => {
@@ -20,9 +19,29 @@ export class Router {
 
   parseLocation = () => location.pathname.toLowerCase();
 
-  findComponentByPath = (path) =>
-    this.routes.find((r) => r.path.match(new RegExp(`^${path}$`, "gmi"))) ||
-    undefined;
+  findComponentByPath = (path) => {
+    const params = {};
+    const result = this.routes.find((r) => {
+      const pathArr = r.path.split("/").slice(1);
+      const toBeMatchedArr = path.split("/").slice(1);
+      if (pathArr.length !== toBeMatchedArr.length) {
+        return false;
+      }
+      for (let index = 0; index < pathArr.length; index++) {
+        const chunk = pathArr[index];
+        if (chunk.match(/^:/)) {
+          params[chunk.slice(1)] = toBeMatchedArr[index];
+        } else if (chunk !== toBeMatchedArr[index]) {
+          return false;
+        }
+      }
+      return true;
+    });
+    if (result) {
+      result.params = params;
+    }
+    return result || undefined;
+  };
 
   startListening = () => {
     this.route();

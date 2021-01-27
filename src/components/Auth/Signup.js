@@ -20,7 +20,7 @@ const signupTemplate = (context) => {
 
         .log-in {
           width: 20vw;
-          height: 70vh;
+          height: 75vh;
           margin: 5vh 0;
           padding: 60px 35px 35px 35px;
           border-radius: 40px;
@@ -64,11 +64,7 @@ const signupTemplate = (context) => {
           letter-spacing: 3px;
           text-transform: uppercase;
           font-weight: bold;
-        }
-
-        #login-form {
-          width: 100%;
-          padding: 100px 5px 30px 5px;
+          margin-bottom: 30%;
         }
 
         .form-group {
@@ -101,6 +97,7 @@ const signupTemplate = (context) => {
           outline: none;
           width: 100%;
           height: 60px;
+          margin-top: 10%;
           border-radius: 5px;
           font-size: 22px;
           color: white;
@@ -152,7 +149,7 @@ const signupTemplate = (context) => {
         <div class="log-in">
           <div class="logo"></div>
           <div class="title">IT Library</div>
-          <div class="sub-title">Beta</div>
+          <div class="sub-title">Signup</div>
           <form id="register-form" @submit=${context.handleSubmit}>
             <div class="form-group">
               <svg class="svg-icon" viewBox="0 0 20 20">

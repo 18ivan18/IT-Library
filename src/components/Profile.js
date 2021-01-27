@@ -44,7 +44,7 @@ const bookHistoryTemplate = (book) => html`<div class="title">
       ${new Date(
         +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
       )}
-      <button>Read now!</button>
+      <button @click=${() => redirect(`/view/${book.id}`)}>Read now!</button>
       <button>Return the book!</button>
     </div>`
   )}`;

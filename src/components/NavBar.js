@@ -85,7 +85,12 @@ const navBarTemplate = (context) => html`
       <a href="/about" is="nav-anchor">About</a>
       <a href="/contacs" is="nav-anchor">Contact us</a>
       <form @submit=${context.handleSubmit}>
-        <input type="text" placeholder="Search.." name="search" />
+        <input
+          type="text"
+          placeholder="Search.."
+          name="search"
+          autocomplete="off"
+        />
         <button type="submit">
           <img
             src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/search-512.png"

@@ -302,15 +302,6 @@ const libraryTemplate = (context) => html`
         #238d76
       );
     }
-    .link {
-      text-align: center;
-      padding-top: 20px;
-    }
-    .link a {
-      text-decoration: none;
-      color: white;
-      font-size: 20px;
-    }
 
     .checked {
       background-color: lightcoral;

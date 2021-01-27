@@ -1,8 +1,6 @@
 import { html } from "lit-html";
-// import { ifThen } from './directives/if-then.js';
 
-import { decorateAsComponent } from "../utils/decorate-as-component.js";
-import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
+import { decorateAsComponent, decorateAsStateProperty } from "../utils/";
 
 const notFoundTemplate = (context) => html`<p>404 not found</p> `;
 
