@@ -67,6 +67,9 @@ const profileTemplate = (context) => {
           text-align: center;
           text-transform: uppercase;
         }
+        .th {
+          background-color: lightskyblue;
+        }
         .stats {
           text-transform: uppercase;
           font-weight: bold;
@@ -80,29 +83,56 @@ const profileTemplate = (context) => {
         .buttons {
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: space-around;
+          margin: 5% 0px;
         }
+
+        .buttons button {
+          display: inline-block;
+          padding: 0.35em 2.3em;
+          border: 0.05em solid #ffffff;
+          margin: 0 0.3em 0.3em 0;
+          border-radius: 0.5em;
+          box-sizing: border-box;
+          text-decoration: none;
+          font-family: "Roboto", sans-serif;
+          font-weight: 300;
+          background-color: lightgray;
+          color: #ffffff;
+          text-align: center;
+          transition: all 0.2s;
+          cursor: pointer;
+        }
+
+        .buttons button:hover {
+          color: #000000;
+          background-color: #ffffff;
+        }
+
         .personal-info img {
           position: relative;
           width: 100%;
           height: 100%;
         }
+
         .book-history {
           background: white;
           height: 100%;
           display: grid;
           grid-template-rows: 20px auto;
           grid-template-columns: 1fr 1fr 2fr;
-          height: 79vh;
+          height: 85vh;
           overflow-y: scroll;
           grid-row-gap: 30px;
         }
+
         .info {
           margin-top: 4%;
           margin-bottom: 4%;
           display: grid;
           grid-template-columns: 1fr 1fr;
         }
+
         .info p {
           padding: 10px 15%;
           margin: 0;

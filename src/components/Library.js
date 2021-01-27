@@ -27,13 +27,6 @@ const printResourcesInfo = (arrOfBooks) =>
             transform: scale(1.1);
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
           }
-          .card-image {
-            grid-area: image;
-            background: url(${book.coverURL});
-            background-size: cover;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-          }
           .card-text {
             grid-area: text;
             margin: 5%;
@@ -97,7 +90,14 @@ const printResourcesInfo = (arrOfBooks) =>
           }
         </style>
         <div class="card">
-          <div class="card-image"></div>
+          <div
+            class="card-image"
+            style="background: url(${book.coverURL});
+            grid-area: image;
+            background-size: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;"
+          ></div>
           <div class="card-text">
             <span>${book.author}</span>
             <h2>${book.title}</h2>
@@ -139,19 +139,20 @@ const basicFormRender = (handleSubmit) => html`
   <form id="search-form" @submit=${handleSubmit}>
   <div class="form-group" >
     <input type="text" id="title" name="title" placeholder="Title" autocomplete="off"/>
-    <span>
+    <span class="exact-match">
       <input type="checkbox" name="titleExactMatch"> Exact Match only
     </span>
   </div>
   <div class="form-group">
     <input type="text" id="author" name="author" placeholder="Autor" autocomplete="off"/>
-    <span>
+    <span class="exact-match">
       <input type="checkbox" name="authorExactMatch"> Exact Match only
     </span>
    </div>
     <div class="form-group">
     <input type="text" id="tag" name="tag" placeholder="Tag" autocomplete="off"/>
    </div>
+   
     <select name="sortBy" id="sortBy" class="form-group">
       <option value="author">Author</option>
       <option value="title">Title</option>
@@ -161,28 +162,161 @@ const basicFormRender = (handleSubmit) => html`
       <option value="asc">Ascending</option>
       <option value="desc">Descending</option>
     </select>
-    <button id="search">Search</button>
+    <button class="submit-button" >
+          Search
+        </button>
   </div>
 </form>`;
 
 const libraryTemplate = (context) => html`
   <style>
+    .body {
+      display: flex;
+      justify-content: center;
+      font-weight: 300;
+    }
+
+    .library {
+      width: 30vw;
+      height: 80vh;
+      margin: 2vh 0;
+      padding: 60px 35px 35px 35px;
+      border-radius: 40px;
+      background: radial-gradient(
+        circle,
+        #555555,
+        #535353,
+        #505050,
+        #4e4e4e,
+        #4c4c4c
+      );
+      box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.2),
+        0px 5px 10px rgba(0, 0, 0, 0.2), 0 70px 50px rgba(0, 0, 0, 0.4),
+        30px 50px 50px rgba(0, 0, 0, 0.2), -30px 50px 50px rgba(0, 0, 0, 0.2),
+        inset 20px 0 60px rgba(0, 0, 0, 0.1),
+        inset -20px 0 60px rgba(0, 0, 0, 0.1);
+    }
+    .logo {
+      background-image: url(https://cdn.logo.com/hotlink-ok/logo-social.png);
+      background-position: center;
+      background-size: cover;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto;
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+      text-align: center;
+      font-size: 28px;
+      padding-top: 24px;
+      letter-spacing: 0.5px;
+    }
+
+    .sub-title {
+      text-align: center;
+      font-size: 15px;
+      padding-top: 7px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    #login-form {
+      width: 100%;
+      padding: 100px 5px 30px 5px;
+    }
+
+    .form-group {
+      display: flex;
+    }
+
+    .form-group input[type="text"],
+    select {
+      border: none;
+      outline: none;
+      background: none;
+      padding: 10px 10px 10px 5px;
+      color: white;
+      font-size: 18px;
+      width: 73%;
+    }
+    #tag,
+    select {
+      width: 100%;
+    }
+    option {
+      color: black;
+    }
+
+    .form-group {
+      display: block;
+      border-bottom: 1px solid #b3b3b3;
+      margin-bottom: 30px;
+    }
+    .form-group svg {
+      height: 22px;
+      margin-bottom: -3px;
+      margin-right: 10px;
+    }
+    .submit-button {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      width: 100%;
+      height: 60px;
+      border-radius: 5px;
+      font-size: 22px;
+      color: white;
+      text-align: center;
+      letter-spacing: 1px;
+      background: radial-gradient(
+        circle,
+        #24cfaa,
+        #26c5a3,
+        #28bb9c,
+        #29b294,
+        #2aa88d
+      );
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit-button:hover {
+      background: radial-gradient(
+        circle,
+        #2fdbb6,
+        #32d6b3,
+        #32c9a8,
+        #36c7a7,
+        #38bb9f
+      );
+    }
+    .submit-button:active {
+      background: radial-gradient(
+        circle,
+        #1da88a,
+        #1ea084,
+        #229c82,
+        #23947b,
+        #238d76
+      );
+    }
+    .link {
+      text-align: center;
+      padding-top: 20px;
+    }
+    .link a {
+      text-decoration: none;
+      color: white;
+      font-size: 20px;
+    }
+
     .checked {
       background-color: lightcoral;
     }
-    .container {
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-      align-items: center;
-      width: 80vw;
-      height: 60vh;
-      border: 1px #eee solid;
-      background: lightgray;
-      z-index: 5;
-    }
 
-    .header {
+    .floating {
       font-size: 9vw;
       position: absolute;
       transform: rotate(-40deg);
@@ -194,55 +328,11 @@ const libraryTemplate = (context) => html`
       z-index: 0;
     }
 
-    #search-form {
-      display: flex;
-      flex-direction: column;
-      box-sizing: border-box;
-      padding: 24px;
-    }
-
-    input[type="text"],
-    select {
-      box-sizing: border-box;
-      height: 38px;
-      width: 360px;
-      margin: 8px;
-      border: solid 2px #bbc9ba;
-      font-size: 14px;
-      color: #757575;
-      padding: 8px;
-    }
-
-    input:hover,
-    select:hover {
-      border: solid 2px #79a06b;
-    }
-
-    #search {
-      background-color: #cfe7d9;
-      color: #558d3d;
-      border: solid 2px #bbc9ba;
-      height: 30px;
-      margin-top: 2%;
-      margin-left: 8px;
-      width: 360px;
-    }
-
-    #search:hover {
-      background-color: #558d3d;
-      color: #cfe7d9;
-      border: solid 2px #cfe7d9;
-    }
-
     .buttons {
       display: flex;
       justify-content: space-around;
-      margin: 20px 0;
-    }
-
-    .search h4 {
-      text-align: center;
-      font-size: 1.5em;
+      align-items: center;
+      margin: 5% 0;
     }
 
     button {
@@ -263,11 +353,6 @@ const libraryTemplate = (context) => html`
       cursor: pointer;
       outline: none;
     }
-
-    button:hover {
-      color: #000000;
-      background-color: #ffffff;
-    }
     .card-container {
       display: grid;
       width: 80%;
@@ -277,11 +362,16 @@ const libraryTemplate = (context) => html`
       align-items: center;
       justify-content: center;
     }
+    .exact-match {
+      float: right;
+    }
   </style>
-  <h1 class="header">Library</h1>
-  <div class="container">
-    <div class="search">
-      <h4>Search your favourite books</h4>
+  <h1 class="floating">Library</h1>
+  <div class="body">
+    <div class="library">
+      <div class="logo"></div>
+      <div class="title">IT Library</div>
+      <div class="sub-title">Search your favourite books</div>
       <div class="buttons">
         <button
           name="book"
@@ -304,7 +394,6 @@ const libraryTemplate = (context) => html`
         </button>
       </div>
       ${basicFormRender(context.handleSubmit)}
-      ${ifThen(context.isLoading, html`<h1>LOADING...</h1>`)}
     </div>
   </div>
   <div class="card-container">${printResourcesInfo(context.resources)}</div>

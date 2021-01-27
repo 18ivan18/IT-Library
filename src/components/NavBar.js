@@ -58,10 +58,18 @@ const navBarTemplate = (context) => html`
       padding: 18.5px 20.5px;
     }
 
+    form button {
+      border: none;
+      outline: none;
+    }
+
     input[type="text"] {
       outline: none;
       border-radius: 25px;
       border: none;
+      /* border-bottom: 1px black solid; */
+      /* background-color: transparent; */
+      box-shadow: none;
       width: 200px;
       height: 25px;
     }

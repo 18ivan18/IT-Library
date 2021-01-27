@@ -11,6 +11,7 @@ import {
   Statistics,
 } from "./components";
 import { html } from "lit-html";
+import "./main.css";
 
 const appTemplate = () => html`
   <style>

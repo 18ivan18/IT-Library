@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (env) => {
   const isProd = env.NODE_ENV === "prod";
@@ -12,6 +13,13 @@ module.exports = (env) => {
       filename: "[name].bundle.js",
       path: path.resolve(__dirname, "dist"),
     },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: "./index.html",
+        title: "IT-Library",
+      }),
+      new MiniCssExtractPlugin({ filename: "[name].css" }),
+    ],
     module: {
       rules: [
         {
@@ -26,8 +34,8 @@ module.exports = (env) => {
           },
         },
         {
-          test: /\.ico$/,
-          loader: "file-loader",
+          test: /\.css$/i,
+          use: [MiniCssExtractPlugin.loader, "css-loader"],
         },
       ],
     },
@@ -36,12 +44,6 @@ module.exports = (env) => {
         chunks: "all",
       },
     },
-    plugins: [
-      new HtmlWebpackPlugin({
-        template: "./index.html",
-        title: "IT-Library",
-      }),
-    ],
     devServer: {
       contentBase: path.join(__dirname, "dist"),
       compress: true,

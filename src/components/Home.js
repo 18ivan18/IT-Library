@@ -1,6 +1,7 @@
 import { html } from "lit-html";
 
 import { decorateAsComponent } from "../utils/";
+import { NavAnchor } from "./CustomElements/NavAnchor";
 
 const homePageTemplate = (context) => html`
   <style>
@@ -139,9 +140,9 @@ const homePageTemplate = (context) => html`
       </p>
     </article>
     <div class="buttons">
-      <a href="/aboutus">About Us</a>
-      <a href="/contacts">Contact</a>
-      <a href="/signup">Sign Up 🐔</a>
+      <a href="/aboutus" is="nav-anchor">About Us</a>
+      <a href="/contacts" is="nav-anchor">Contact</a>
+      <a href="/signup" is="nav-anchor">Sign Up 🐔</a>
     </div>
   </section>
 `;
