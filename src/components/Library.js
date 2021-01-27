@@ -261,6 +261,7 @@ const libraryTemplate = (context) => html`
       transition: all 0.2s;
       font-size: 15px;
       cursor: pointer;
+      outline: none;
     }
 
     button:hover {
