@@ -149,7 +149,7 @@ const footerTemplate = (context) => html` <style>
         <address>
           5534 Somewhere In. The World 22193-10212<br />
 
-          <a class="footer__btn" href="mailto:example@gmail.com">Email Us</a>
+          <a class="footer__btn" href="itlibray@gmail.com">Email Us</a>
         </address>
       </div>
 
@@ -226,7 +226,7 @@ const footerTemplate = (context) => html` <style>
 
         <div class="legal__links">
           <span
-            >Made with <span class="heart">♥</span> remotely from Anywhere</span
+            >Made with <span class="heart">♥</span> by Ivan and Theodor</span
           >
         </div>
       </div>

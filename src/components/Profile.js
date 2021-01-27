@@ -174,7 +174,7 @@ const profileTemplate = (context) => {
             <p class="stats">Website</p>
             <p>${context.auth.user.website}</p>
             <p class="stats">Resources</p>
-            <p>${context.auth.user.resources}</p>
+            <p>${context.auth.user.points}</p>
           </div>
           <div class="buttons">
             <button @click=${() => redirect("/import")}>Upload books</button>
@@ -214,12 +214,14 @@ export class Profile extends HTMLElement {
   }
 
   connectedCallback() {
+    this.isLoading = true;
     fetch(parse("history"))
       .then((resp) => resp.json())
       .then((json) => {
-        this.history = json;
+        this.history = json.history;
       })
       .catch(console.log);
+    this.isLoading = false;
   }
 }
 
