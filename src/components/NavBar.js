@@ -4,6 +4,7 @@ import { decorateAsComponent } from "../utils/decorate-as-component.js";
 import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
 import { Store } from "../utils/store/store";
 import { NavAnchor } from "../components/CustomElements/NavAnchor";
+import { getBooks, redirect } from "../utils/index.js";
 
 const navBarTemplate = (context) => html`
   <style>
@@ -86,6 +87,7 @@ const navBarTemplate = (context) => html`
       <a href="/contacs" is="nav-anchor">Contact us</a>
       <form @submit=${context.handleSubmit}>
         <input
+          id="search-input"
           type="text"
           placeholder="Search.."
           name="search"
@@ -135,7 +137,8 @@ export class Navbar extends HTMLElement {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log("searched...");
+    getBooks({ name: this.shadowRoot.getElementById("search-input").value });
+    redirect("library");
   };
 }
 

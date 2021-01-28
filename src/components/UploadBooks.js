@@ -219,7 +219,6 @@ export class UploadBooks extends HTMLElement {
   };
 
   handleChange = (e) => {
-    console.log(e.target.files[0]);
     this.file = e.target.files[0] || undefined;
     this.filename = e.target.files[0] ? e.target.files[0].name : undefined;
   };

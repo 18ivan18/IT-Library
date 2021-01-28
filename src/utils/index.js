@@ -7,3 +7,5 @@ export * from "./router";
 export * from "./history";
 export * from "./if-then";
 export * from "./createFileDest";
+export * from "./API/fetch";
+export * from "./store/store";

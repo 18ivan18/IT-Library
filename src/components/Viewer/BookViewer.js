@@ -126,6 +126,17 @@ const bookViewerTemplate = (context) => {
           display: flex;
           justify-content: space-around;
         }
+        .order {
+          cursor: pointer;
+          transition: 0.3s;
+          padding: 0 5%;
+        }
+        .order:hover {
+          border: 1px #333 solid;
+          border-radius: 20px;
+          transform: scale(1.2);
+          box-shadow: 10px 10px 8px #888888;
+        }
       </style>
       <div class="body">
         <div class="cover">
@@ -155,9 +166,10 @@ const bookViewerTemplate = (context) => {
                         ${context.book.count > 0 ? "left" : "available"}</span
                       >
                     </p>
-                    <p class="page__content-credits">
-                      Introduction by
-                      <span>Paul Krugman</span>
+
+                    <p class="page__content-credits order">
+                      ${context.book.count > 0 ? "Get it" : "Contact"}
+                      <span> ${context.book.count > 0 ? "NOW" : "us"}</span>
                     </p>
                   </div>
 
@@ -174,6 +186,7 @@ const bookViewerTemplate = (context) => {
   }
   return "";
 };
+// TODO: send POST request to buyBook.php with parameters username and book id named id
 
 export class BookViewer extends HTMLElement {
   static selector = "app-book-viewer";

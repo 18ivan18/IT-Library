@@ -6,6 +6,7 @@ import {
   ifThen,
   isLate,
   parse,
+  getBooks,
 } from "../utils";
 import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
@@ -16,7 +17,14 @@ const bookHistoryTemplate = (book) => html`<div class="title">
     <a href="/books/${book.id}" is="nav-anchor">${book.name}</a>
   </div>
   <div class="author">
-    <a is="nav-anchor" href="/">${book.author}</a>
+    <a
+      is="nav-anchor"
+      href="library"
+      @click=${(e) => {
+        getBooks({ author: book.author });
+      }}
+      >${book.author}</a
+    >
   </div>
   ${ifThen(
     book.dateReturned,
@@ -177,8 +185,9 @@ const profileTemplate = (context) => {
             <p>${context.auth.user.points}</p>
           </div>
           <div class="buttons">
-            <button @click=${() => redirect("/import")}>Upload books</button>
+            <button @click=${() => redirect("/import")}>Upload books 📚</button>
             <button>Order pizza 🍕</button>
+            <button>Update profile 👨‍🏫</button>
           </div>
         </div>
         <div class="book-history">
@@ -193,6 +202,7 @@ const profileTemplate = (context) => {
     redirect("/login");
   }
 };
+// TODO: send POST request to returnBook.php with username and book id named id
 
 export class Profile extends HTMLElement {
   static selector = "app-profile";
@@ -215,6 +225,7 @@ export class Profile extends HTMLElement {
 
   connectedCallback() {
     this.isLoading = true;
+    // TODO: send query parameter username
     fetch(parse("history"))
       .then((resp) => resp.json())
       .then((json) => {

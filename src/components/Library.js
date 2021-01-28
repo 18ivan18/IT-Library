@@ -3,6 +3,8 @@ import { html } from "lit-html";
 import {
   decorateAsComponent,
   decorateAsStateProperty,
+  getBooks,
+  nextTick,
   parse,
   redirect,
 } from "../utils/";
@@ -404,7 +406,7 @@ export class Library extends HTMLElement {
     decorateAsStateProperty(this, "isLoading", false);
     decorateAsStateProperty(this, "auth", Store.getState().auth);
     decorateAsStateProperty(this, "type", "paper");
-    decorateAsStateProperty(this, "resources", []);
+    decorateAsStateProperty(this, "resources", Store.getState().resources);
     Store.subscribe((action) => {
       if (action.type === "LOGIN" || action.type === "LOGOUT") {
         this.auth = Store.getState().auth;
@@ -415,6 +417,21 @@ export class Library extends HTMLElement {
         this.resources = Store.getState().resources;
       }
     });
+  }
+
+  disconnectedCallback() {
+    Store.dispatch({
+      type: "SET_RESOURCES",
+      payload: {
+        resources: [],
+      },
+    });
+  }
+
+  connectedCallback() {
+    if (this.resources.length) {
+      document.documentElement.scrollTop = 2 * window.innerHeight;
+    }
   }
 
   handleButtonClick = (e) => {
@@ -438,8 +455,6 @@ export class Library extends HTMLElement {
       let { value, name, type } = currInput;
       if (type === "number") {
         value = currInput.valueAsNumber;
-      } else if (type === "date") {
-        value = currInput.valueAsDate;
       } else if (type === "checkbox") {
         value = currInput.checked;
       }
@@ -461,17 +476,7 @@ export class Library extends HTMLElement {
     // const query = Object.keys(data)
     //   .map((k) => esc(k) + "=" + esc(data[k]))
     //   .join("&");
-    fetch(parse("/", new URLSearchParams(data)))
-      .then((data) => data.json())
-      .then((resources) => {
-        Store.dispatch({
-          type: "SET_RESOURCES",
-          payload: {
-            resources,
-          },
-        });
-      })
-      .catch((err) => console.log(err));
+    getBooks(data);
     document.documentElement.scrollTop = window.innerHeight;
     this.isLoading = false;
   };
