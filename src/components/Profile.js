@@ -226,7 +226,12 @@ export class Profile extends HTMLElement {
 
   getHistory = () => {
     this.isLoading = true;
-    fetch(parse("history", { username: this.auth.user.username }))
+    fetch(
+      parse(
+        "history",
+        new URLSearchParams({ username: this.auth.user.username })
+      )
+    )
       .then((resp) => resp.json())
       .then((json) => {
         this.history = json.history;

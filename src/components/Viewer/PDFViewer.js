@@ -196,7 +196,6 @@ export class PDFViewer extends HTMLElement {
   };
 
   copyToClipboard = (e) => {
-    // TODO: send query parameter
     fetch(parse("quote", new URLSearchParams({ id: this.id })))
       .then((data) => data.json())
       .then((json) => {
