@@ -159,6 +159,18 @@ const loginTemplate = (context) => html`
       letter-spacing: 0.4em;
       user-select: none;
     }
+    .info-message {
+      margin-top: 10%;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .success {
+      color: lightgreen;
+    }
+    .failure {
+      color: #ffcccb;
+    }
   </style>
   <h1 id="log">Log</h1>
   <h1 id="in">In</h1>
@@ -197,6 +209,16 @@ const loginTemplate = (context) => html`
             placeholder="Password"
           />
         </div>
+        ${context.successMessage
+          ? html`<div class="info-message success">
+              ${context.successMessage}
+            </div>`
+          : ""}
+        ${context.errorMessage
+          ? html`<div class="info-message failure">
+              ${context.errorMessage}
+            </div>`
+          : ""}
         <button class="submit-button" ?disabled=${context.isLoading}>
           Login
         </button>
@@ -215,10 +237,14 @@ export class Login extends HTMLElement {
 
     decorateAsComponent(this, loginTemplate);
     decorateAsStateProperty(this, "isLoading", false);
+    decorateAsStateProperty(this, "errorMessage", null);
+    decorateAsStateProperty(this, "successMessage", null);
   }
 
   submitHandler = (e) => {
     e.preventDefault();
+    this.errorMessage = null;
+    this.successMessage = null;
     // TODO: validate
     this.isLoading = true;
     const inputs = Array.from(
@@ -242,7 +268,12 @@ export class Login extends HTMLElement {
               user: resp.user,
             },
           });
-          redirect();
+          this.successMessage = "Logged in successfully";
+          setTimeout(() => {
+            redirect("/profile");
+          }, 1000);
+        } else {
+          this.errorMessage = resp.message;
         }
       })
       .catch((err) => console.log(err))

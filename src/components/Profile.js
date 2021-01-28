@@ -12,7 +12,7 @@ import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
 
 // TODO: Format the dates
-const bookHistoryTemplate = (book) => html`<div class="title">
+const bookHistoryTemplate = ({ book, returnBook }) => html`<div class="title">
     <img src=${book.coverURL} alt="book cover image" />
     <a href="/books/${book.id}" is="nav-anchor">${book.name}</a>
   </div>
@@ -43,7 +43,7 @@ const bookHistoryTemplate = (book) => html`<div class="title">
       )}.
       Return ${book.name} as soon as possible.
 
-      <button>Return the book!</button>
+      <button @click=${() => returnBook(book.id)}>Return the book!</button>
     </p>`
   )}
   ${ifThen(
@@ -54,7 +54,7 @@ const bookHistoryTemplate = (book) => html`<div class="title">
         +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
       )}
       <button @click=${() => redirect(`/view/${book.id}`)}>Read now!</button>
-      <button>Return the book!</button>
+      <button @click=${() => returnBook(book.id)}>Return the book!</button>
     </div>`
   )}`;
 
@@ -194,7 +194,9 @@ const profileTemplate = (context) => {
           <h3 class="th">Title</h3>
           <h3 class="th">Author</h3>
           <h3 class="th">Info</h3>
-          ${context.history.map((book) => bookHistoryTemplate(book))}
+          ${context.history.map((book) =>
+            bookHistoryTemplate({ book, returnBook: context.returnBook })
+          )}
         </div>
       </div>
     `;
@@ -202,7 +204,6 @@ const profileTemplate = (context) => {
     redirect("/login");
   }
 };
-// TODO: send POST request to returnBook.php with username and book id named id
 
 export class Profile extends HTMLElement {
   static selector = "app-profile";
@@ -223,17 +224,39 @@ export class Profile extends HTMLElement {
     });
   }
 
-  connectedCallback() {
+  getHistory = () => {
     this.isLoading = true;
-    // TODO: send query parameter username
-    fetch(parse("history"))
+    fetch(parse("history", { username: this.auth.user.username }))
       .then((resp) => resp.json())
       .then((json) => {
         this.history = json.history;
       })
       .catch(console.log);
     this.isLoading = false;
+  };
+
+  connectedCallback() {
+    this.getHistory();
   }
+
+  returnBook = (id) => {
+    this.isLoading = true;
+    const formData = new FormData();
+    formData.append("username", this.auth.user.username);
+    formData.append("id", id);
+    fetch(parse("returnBook"), {
+      method: "POST",
+      body: formData,
+    })
+      .then((resp) => resp.json())
+      .then((json) => {
+        if (json.success) {
+          this.getHistory();
+        }
+      })
+      .catch(console.log);
+    this.isLoading = false;
+  };
 }
 
 customElements.define(Profile.selector, Profile);

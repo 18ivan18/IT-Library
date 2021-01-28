@@ -165,7 +165,19 @@ const signupTemplate = (context) => {
           transition: 0.5s;
         }
         .horizontal {
-          transform: rotate(${Math.random() * 60 + 120}deg);
+          transform: rotate(${context.rand}deg);
+        }
+        .info-message {
+          margin-top: 10%;
+          text-align: center;
+          font-weight: bold;
+          font-size: 20px;
+        }
+        .success {
+          color: lightgreen;
+        }
+        .failure {
+          color: #ffcccb;
         }
       </style>
       <h1 id="sign">Sign</h1>
@@ -236,6 +248,16 @@ const signupTemplate = (context) => {
                 autocomplete="off"
               />
             </div>
+            ${context.successMessage
+              ? html`<div class="info-message success">
+                  ${context.successMessage}
+                </div>`
+              : ""}
+            ${context.errorMessage
+              ? html`<div class="info-message failure">
+                  ${context.errorMessage}
+                </div>`
+              : ""}
             <button class="submit-button" ?disabled=${context.isLoading}>
               Register
             </button>
@@ -257,10 +279,15 @@ export class Signup extends HTMLElement {
     decorateAsComponent(this, signupTemplate);
 
     decorateAsStateProperty(this, "isLoading", false);
+    decorateAsStateProperty(this, "errorMessage", null);
+    decorateAsStateProperty(this, "successMessage", null);
+    decorateAsStateProperty(this, "rand", Math.random() * 60 + 120);
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.errorMessage = null;
+    this.successMessage = null;
     const inputs = Array.from(
       this.shadowRoot
         .getElementById("register-form")
@@ -278,13 +305,12 @@ export class Signup extends HTMLElement {
       .then((resp) => resp.json())
       .then((resp) => {
         if (resp.success) {
-          Store.dispatch({
-            type: "LOGIN",
-            payload: {
-              user: resp.user,
-            },
-          });
-          redirect();
+          this.successMessage = "Successfully signed up!";
+          setTimeout(() => {
+            redirect("/login");
+          }, 1000);
+        } else {
+          this.errorMessage = resp.message;
         }
       })
       .catch((err) => console.log(err));

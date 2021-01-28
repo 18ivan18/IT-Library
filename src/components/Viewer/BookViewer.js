@@ -4,7 +4,9 @@ import {
   decorateAsComponent,
   decorateAsStateProperty,
   parse,
+  redirect,
 } from "../../utils/";
+import { Store } from "../../utils/store/store";
 
 const bookViewerTemplate = (context) => {
   if (context.book) {
@@ -167,7 +169,14 @@ const bookViewerTemplate = (context) => {
                       >
                     </p>
 
-                    <p class="page__content-credits order">
+                    <p
+                      class="page__content-credits order"
+                      @click=${context.book.count > 0
+                        ? context.getBook
+                        : () => {
+                            redirect("/contacts");
+                          }}
+                    >
                       ${context.book.count > 0 ? "Get it" : "Contact"}
                       <span> ${context.book.count > 0 ? "NOW" : "us"}</span>
                     </p>
@@ -186,7 +195,6 @@ const bookViewerTemplate = (context) => {
   }
   return "";
 };
-// TODO: send POST request to buyBook.php with parameters username and book id named id
 
 export class BookViewer extends HTMLElement {
   static selector = "app-book-viewer";
@@ -199,7 +207,13 @@ export class BookViewer extends HTMLElement {
 
     decorateAsStateProperty(this, "isLoading", false);
     decorateAsStateProperty(this, "book", null);
+    decorateAsStateProperty(this, "auth", Store.getState().auth);
     this.id = id;
+    Store.subscribe((action) => {
+      if (action.type === "LOGIN" || action.type === "LOGOUT") {
+        this.auth = Store.getState().auth;
+      }
+    });
   }
 
   connectedCallback() {
@@ -210,6 +224,27 @@ export class BookViewer extends HTMLElement {
       .catch(console.log);
     this.isLoading = false;
   }
+
+  // TODO: send POST request to buyBook.php with parameters username and book id named id
+  getBook = () => {
+    this.isLoading = true;
+    if (!this.auth.isLoggedIn) {
+      this.errorMessage = "You must be logged in to get a book!";
+      redirect("/login");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("username", this.auth.user.username);
+    formData.append("id", this.id);
+    fetch(parse("buyBook"), {
+      method: "POST",
+      body: formData,
+    })
+      .then((resp) => resp.json())
+      .then((json) => (this.book = json.book))
+      .catch(console.log);
+    this.isLoading = false;
+  };
 }
 
 customElements.define(BookViewer.selector, BookViewer);

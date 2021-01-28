@@ -137,7 +137,8 @@ export class Navbar extends HTMLElement {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    getBooks({ name: this.shadowRoot.getElementById("search-input").value });
+    getBooks({ title: this.shadowRoot.getElementById("search-input").value });
+    this.shadowRoot.getElementById("search-input").value = "";
     redirect("library");
   };
 }
