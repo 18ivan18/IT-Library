@@ -140,7 +140,28 @@ const loginTemplate = (context) => html`
       color: white;
       font-size: 20px;
     }
+    #log {
+      font-size: 11vw;
+      position: absolute;
+      transform: rotate(-50deg);
+      opacity: 15%;
+      letter-spacing: 0.4em;
+      user-select: none;
+    }
+    #in {
+      font-size: 11vw;
+      position: absolute;
+      transform: rotate(40deg);
+      opacity: 15%;
+      right: 10%;
+      top: 20%;
+      margin: 0;
+      letter-spacing: 0.4em;
+      user-select: none;
+    }
   </style>
+  <h1 id="log">Log</h1>
+  <h1 id="in">In</h1>
   <div class="body">
     <div class="log-in">
       <div class="logo"></div>

@@ -7,4 +7,5 @@ export * from "./NavBar";
 export * from "./Library";
 export * from "./NotFound";
 export * from "./Auth";
-export * from "./Viewer/Viewer";
+export * from "./Viewer/PDFViewer";
+export * from "./Viewer/BookViewer";

@@ -178,7 +178,7 @@ const profileTemplate = (context) => {
           </div>
           <div class="buttons">
             <button @click=${() => redirect("/import")}>Upload books</button>
-            <button>Do something else I guess 🍕</button>
+            <button>Order pizza 🍕</button>
           </div>
         </div>
         <div class="book-history">

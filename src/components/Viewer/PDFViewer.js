@@ -28,8 +28,7 @@ const render = (self) => {
 const PDFViewerTemplate = (context) => html`
   <style>
     #canvas-container {
-      width: 100%;
-      height: 80vh;
+      height: 85vh;
       overflow: auto;
       background: #333;
       text-align: center;
@@ -39,11 +38,60 @@ const PDFViewerTemplate = (context) => html`
     #zoom-controls {
       display: flex;
       justify-content: center;
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+    button {
+      margin: 0 10px;
     }
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
       -webkit-appearance: none;
       margin: 0;
+    }
+    .tooltip {
+      position: relative;
+    }
+
+    .tooltip::before,
+    .tooltip::after {
+      --scale: 0;
+      --arrow-size: 10px;
+      --tooltip-color: #333;
+
+      position: absolute;
+      top: -0.25rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(var(--translate-y, 0))
+        scale(var(--scale));
+      transition: 150ms transform;
+      transform-origin: bottom center;
+    }
+
+    .tooltip::before {
+      --translate-y: calc(-100% - var(--arrow-size));
+
+      content: "Copied to clipboard!";
+      color: white;
+      padding: 0.5rem;
+      border-radius: 0.3rem;
+      text-align: center;
+      width: max-content;
+      background: var(--tooltip-color);
+    }
+
+    .tooltip::before,
+    .tooltip::after {
+      --scale: 1;
+    }
+
+    .tooltip::after {
+      --translate-y: calc(-1 * var(--arrow-size));
+
+      content: "";
+      border: var(--arrow-size) solid transparent;
+      border-top-color: var(--tooltip-color);
+      transform-origin: top center;
     }
   </style>
   <div id="my-pdf-viewer">
@@ -64,6 +112,9 @@ const PDFViewerTemplate = (context) => html`
 
     <div id="zoom-controls">
       <button id="zoom-in" @click=${context.zoom}>+</button>
+      <button @click=${context.copyToClipboard} id="quote-button">
+        Quote!
+      </button>
       <button id="zoom-out" @click=${context.zoom}>-</button>
     </div>
   </div>
@@ -83,6 +134,7 @@ export class PDFViewer extends HTMLElement {
       currentPage: 1,
       zoom: 1,
     });
+    this.id = id;
   }
 
   connectedCallback() {
@@ -134,8 +186,44 @@ export class PDFViewer extends HTMLElement {
         this.state.currentPage = desiredPage;
         this.shadowRoot.getElementById("current-page").value = desiredPage;
         render(this);
+      } else {
+        this.shadowRoot.getElementById(
+          "current-page"
+        ).value = this.state.currentPage;
       }
     }
+  };
+
+  copyToClipboard = (e) => {
+    fetch(parse("quote") + `/${this.id}`)
+      .then((data) => data.json())
+      .then((json) => {
+        const aux = document.createElement("input");
+
+        // Assign it the value of the specified element
+        aux.setAttribute("value", json.quote);
+
+        // Append it to the body
+        document.body.appendChild(aux);
+
+        // Highlight its content
+        aux.select();
+
+        // Copy the highlighted text
+        document.execCommand("copy");
+
+        // Remove it from the body
+        document.body.removeChild(aux);
+        this.shadowRoot.getElementById("quote-button").classList.add("tooltip");
+
+        setTimeout(() => {
+          this.shadowRoot
+            .getElementById("quote-button")
+            .classList.remove("tooltip");
+        }, 2000);
+      })
+      .catch(console.log);
+    // Create a "hidden" input
   };
 }
 

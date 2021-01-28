@@ -219,13 +219,17 @@ export class UploadBooks extends HTMLElement {
   };
 
   handleChange = (e) => {
+    console.log(e.target.files[0]);
     this.file = e.target.files[0] || undefined;
     this.filename = e.target.files[0] ? e.target.files[0].name : undefined;
   };
 
   handleDrop = (e) => {
     e.preventDefault();
-    if (e.dataTransfer.files.length) {
+    if (
+      e.dataTransfer.files.length &&
+      e.dataTransfer.files[0].type === "application/vnd.ms-excel"
+    ) {
       this.file = e.dataTransfer.files[0];
       this.filename = e.dataTransfer.files[0].name;
     }

@@ -143,8 +143,33 @@ const signupTemplate = (context) => {
           color: white;
           font-size: 20px;
         }
+        #sign {
+          font-size: 11vw;
+          position: absolute;
+          transform: rotate(-140deg);
+          bottom: 25%;
+          margin: 0;
+          opacity: 15%;
+          letter-spacing: 0.4em;
+          user-select: none;
+        }
+        #up {
+          font-size: 11vw;
+          position: absolute;
+          opacity: 15%;
+          right: 10%;
+          bottom: 20%;
+          letter-spacing: 0.4em;
+          user-select: none;
+          margin: 0;
+          transition: 0.5s;
+        }
+        .horizontal {
+          transform: rotate(${Math.random() * 60 + 120}deg);
+        }
       </style>
-
+      <h1 id="sign">Sign</h1>
+      <h1 id="up" class="horizontal" @click=${context.haveFun}>Up</h1>
       <div class="body">
         <div class="log-in">
           <div class="logo"></div>
@@ -263,6 +288,18 @@ export class Signup extends HTMLElement {
         }
       })
       .catch((err) => console.log(err));
+  };
+
+  haveFun = () => {
+    if (this.shadowRoot.getElementById("up")) {
+      if (
+        this.shadowRoot.getElementById("up").classList.contains("horizontal")
+      ) {
+        this.shadowRoot.getElementById("up").classList.remove("horizontal");
+      } else {
+        this.shadowRoot.getElementById("up").classList.add("horizontal");
+      }
+    }
   };
 }
 

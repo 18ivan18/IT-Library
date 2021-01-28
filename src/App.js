@@ -10,6 +10,7 @@ import {
   UploadBooks,
   Statistics,
   PDFViewer,
+  BookViewer,
 } from "./components";
 import { html } from "lit-html";
 import "./main.css";
@@ -39,6 +40,7 @@ const routes = [
   { path: "/import", ctor: UploadBooks },
   { path: "/statistics", ctor: Statistics },
   { path: "/view/:id", ctor: PDFViewer },
+  { path: "/books/:id", ctor: BookViewer },
 ];
 
 export class App extends HTMLElement {

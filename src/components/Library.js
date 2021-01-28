@@ -1,95 +1,19 @@
 import { html } from "lit-html";
 
-import { decorateAsComponent, decorateAsStateProperty, parse } from "../utils/";
+import {
+  decorateAsComponent,
+  decorateAsStateProperty,
+  parse,
+  redirect,
+} from "../utils/";
 
 import { Store } from "../utils/store/store";
-import { ifThen } from "../utils";
 
 const printResourcesInfo = (arrOfBooks) =>
   arrOfBooks.map(
     (book) =>
       html`
-        <style>
-          .card {
-            display: grid;
-            grid-template-columns: auto;
-            grid-template-rows: 190px 190px 80px;
-            grid-template-areas: "image" "text" "stats";
-            font-family: "Roboto", sans-serif;
-            border-radius: 18px;
-            background: white;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
-            text-align: center;
-            transition: 0.5s;
-            cursor: pointer;
-          }
-          .card:hover {
-            transform: scale(1.1);
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
-          }
-          .card-text {
-            grid-area: text;
-            margin: 5%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          .card-text span {
-            color: rgb(255, 7, 110);
-            font-size: 14px;
-          }
-          .card-text p {
-            color: gray;
-            font-size: 15px;
-            font-weight: 300;
-          }
-          .card-text h2 {
-            margin-top: 0;
-            font-size: 18px;
-          }
-          .card-stats {
-            grid-area: stats;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            background: rgb(255, 7, 110);
-          }
-          .card-stats .stat {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 10px;
-            color: white;
-          }
-          .card-stats .type {
-            font-size: 11px;
-            font-weight: 300;
-            text-transform: uppercase;
-          }
-
-          .card-stats .value {
-            font-size: 22px;
-            font-weight: 500;
-          }
-
-          .card-stats .border {
-            border-left: 1px solid rgb(172, 26, 87);
-            border-right: 1px solid rgb(172, 26, 87);
-          }
-
-          .details {
-            transition: background-color 0.3s ease-in;
-            border-bottom-right-radius: 15px;
-          }
-
-          .details:hover {
-            background: rgb(172, 26, 87);
-            border-bottom-right-radius: 15px;
-          }
-        </style>
-        <div class="card">
+        <div class="card" @click=${() => redirect(`/books/${book.id}`)}>
           <div
             class="card-image"
             style="background: url(${book.coverURL});
@@ -170,6 +94,84 @@ const basicFormRender = (handleSubmit) => html`
 
 const libraryTemplate = (context) => html`
   <style>
+    .card {
+      display: grid;
+      grid-template-columns: auto;
+      grid-template-rows: 190px 190px 80px;
+      grid-template-areas: "image" "text" "stats";
+      font-family: "Roboto", sans-serif;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
+      text-align: center;
+      transition: 0.5s;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: scale(1.1);
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
+    }
+    .card-text {
+      grid-area: text;
+      margin: 5%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-text span {
+      color: #545454;
+      font-size: 14px;
+    }
+    .card-text p {
+      color: gray;
+      font-size: 15px;
+      font-weight: 300;
+    }
+    .card-text h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .card-stats {
+      grid-area: stats;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+      background: #545454;
+    }
+    .card-stats .stat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 10px;
+      color: white;
+    }
+    .card-stats .type {
+      font-size: 11px;
+      font-weight: 300;
+      text-transform: uppercase;
+    }
+
+    .card-stats .value {
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    .card-stats .border {
+      border-left: 1px solid #484848;
+      border-right: 1px solid #484848;
+    }
+
+    .details {
+      transition: background-color 0.3s ease-in;
+      border-bottom-right-radius: 15px;
+    }
+
+    .details:hover {
+      background: #484848;
+      border-bottom-right-radius: 15px;
+    }
     .body {
       display: flex;
       justify-content: center;
@@ -314,7 +316,7 @@ const libraryTemplate = (context) => html`
       opacity: 15%;
       letter-spacing: 0.2em;
       left: -3%;
-      top: 14%;
+      top: 17%;
       user-select: none;
       z-index: 0;
     }
@@ -470,6 +472,7 @@ export class Library extends HTMLElement {
         });
       })
       .catch((err) => console.log(err));
+    document.documentElement.scrollTop = window.innerHeight;
     this.isLoading = false;
   };
 }
