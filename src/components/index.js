@@ -9,3 +9,5 @@ export * from "./NotFound";
 export * from "./Auth";
 export * from "./Viewer/PDFViewer";
 export * from "./Viewer/BookViewer";
+export * from "./HR/About";
+export * from "./HR/Contacts";

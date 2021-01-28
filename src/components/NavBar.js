@@ -84,7 +84,7 @@ const navBarTemplate = (context) => html`
       <a href="/library" is="nav-anchor">Books and People</a>
       <a href="/statistics" is="nav-anchor">Statistics</a>
       <a href="/about" is="nav-anchor">About</a>
-      <a href="/contacs" is="nav-anchor">Contact us</a>
+      <a href="/contacts" is="nav-anchor">Contact us</a>
       <form @submit=${context.handleSubmit}>
         <input
           id="search-input"

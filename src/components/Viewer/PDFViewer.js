@@ -197,7 +197,7 @@ export class PDFViewer extends HTMLElement {
 
   copyToClipboard = (e) => {
     // TODO: send query parameter
-    fetch(parse("quote") + `/${this.id}`)
+    fetch(parse("quote", new URLSearchParams({ id: this.id })))
       .then((data) => data.json())
       .then((json) => {
         const aux = document.createElement("input");

@@ -140,7 +140,7 @@ const homePageTemplate = (context) => html`
       </p>
     </article>
     <div class="buttons">
-      <a href="/aboutus" is="nav-anchor">About Us</a>
+      <a href="/about" is="nav-anchor">About Us</a>
       <a href="/contacts" is="nav-anchor">Contact</a>
       <a href="/signup" is="nav-anchor">Sign Up 🐔</a>
     </div>

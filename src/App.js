@@ -11,6 +11,8 @@ import {
   Statistics,
   PDFViewer,
   BookViewer,
+  About,
+  Contacts,
 } from "./components";
 import { html } from "lit-html";
 import "./main.css";
@@ -41,6 +43,8 @@ const routes = [
   { path: "/statistics", ctor: Statistics },
   { path: "/view/:id", ctor: PDFViewer },
   { path: "/books/:id", ctor: BookViewer },
+  { path: "/contacts", ctor: Contacts },
+  { path: "/about", ctor: About },
 ];
 
 export class App extends HTMLElement {
