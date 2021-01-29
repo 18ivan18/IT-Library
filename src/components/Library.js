@@ -359,6 +359,33 @@ const libraryTemplate = (context) => html`
     .exact-match {
       float: right;
     }
+    @media screen and (max-width: 1550px) {
+      .library {
+        width: 40vw;
+      }
+      .submit-button {
+        margin-top: 10%;
+      }
+    }
+    @media screen and (max-width: 740px) {
+      .library {
+        width: 80vw;
+        height: auto;
+      }
+      .submit-button {
+        margin-top: 10%;
+      }
+      button {
+        padding: 0.25em 1em;
+      }
+      .form-group input[type="text"] {
+        width: 49%;
+      }
+      .card-container {
+        gap: 1%;
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
   ${spinner(context.isLoading)}
   <h1 class="floating">Library</h1>

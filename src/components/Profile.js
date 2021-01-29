@@ -176,6 +176,18 @@ const profileTemplate = (context) => {
           width: 100px;
           height: 150px;
         }
+        @media screen and (max-width: 1550px) {
+          .container {
+            display: block;
+          }
+          .personal-info {
+            flex-direction: row;
+            margin: 5% 0;
+          }
+          .personal-info h3 {
+            display: none;
+          }
+        }
       </style>
       ${spinner(context.isLoading)}
       <div class="container">

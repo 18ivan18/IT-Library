@@ -8,6 +8,7 @@ import {
 } from "../utils/";
 
 const statisticsTemplate = (context) => html`<p>Statistics</p>
+  <p>FUNCITONALITY STILL NOT IMPLEMENTED</p>
   <form id="search-form">
     <label for="sortBy">Search for:</label>
     <select
@@ -52,25 +53,26 @@ export class Statistics extends HTMLElement {
   }
 
   getResources = () => {
-    this.isLoading = true;
-    const selectors = Array.from(
-      this.shadowRoot
-        .getElementById("search-form")
-        .getElementsByTagName("select")
-    );
-    const data = selectors.reduce((acc, currInput) => {
-      const { name, selectedIndex } = currInput;
-      acc[name] = currInput.options[selectedIndex].value;
-      return acc;
-    }, {});
-    fetch(parse("statistics", new URLSearchParams(data)))
-      .then((data) => data.json())
-      .then((json) => {
-        this.resources = json;
-      })
-      .catch((err) => console.log(err));
-
-    this.isLoading = false;
+    // this.isLoading = true;
+    // const selectors = Array.from(
+    //   this.shadowRoot
+    //     .getElementById("search-form")
+    //     .getElementsByTagName("select")
+    // );
+    // const data = selectors.reduce((acc, currInput) => {
+    //   const { name, selectedIndex } = currInput;
+    //   acc[name] = currInput.options[selectedIndex].value;
+    //   return acc;
+    // }, {});
+    // fetch(parse("statistics", new URLSearchParams(data)))
+    //   .then((data) => data.json())
+    //   .then((json) => {
+    //     this.resources = json;
+    //   })
+    //   .catch(console.log)
+    //   .finally(() => {
+    //     this.isLoading = false;
+    //   });
   };
 
   onSelectChange = (e) => {

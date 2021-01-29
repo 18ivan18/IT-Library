@@ -90,7 +90,6 @@ const loginTemplate = (context) => html`
       display: block;
       border-bottom: 1px solid #b3b3b3;
       margin-bottom: 30px;
-      width: 90%;
     }
     .form-group svg {
       height: 22px;
@@ -185,6 +184,27 @@ const loginTemplate = (context) => html`
     }
     .failure {
       color: #ffcccb;
+    }
+    @media screen and (max-width: 1550px) {
+      .log-in {
+        width: 40vw;
+      }
+      .submit-button {
+        margin-top: 10%;
+      }
+    }
+    @media screen and (max-width: 740px) {
+      .log-in {
+        width: 70vw;
+      }
+      .submit-button {
+        margin-top: 10%;
+      }
+    }
+    @media screen and (max-width: 740px) {
+      .log-in {
+        width: 80vw;
+      }
     }
   </style>
 

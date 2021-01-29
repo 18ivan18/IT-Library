@@ -140,6 +140,17 @@ const bookViewerTemplate = (context) => {
           transform: scale(1.2);
           box-shadow: 10px 10px 8px #888888;
         }
+        .info-message {
+          text-align: center;
+          font-weight: bold;
+          font-size: 20px;
+        }
+        .success {
+          color: lightgreen;
+        }
+        .failure {
+          color: #ffcccb;
+        }
       </style>
       ${spinner(context.isLoading)}
       <div class="body">
@@ -184,9 +195,14 @@ const bookViewerTemplate = (context) => {
                     </p>
                   </div>
 
+                  ${context.successMessage
+                    ? html`<div class="info-message success">
+                        ${context.successMessage}
+                      </div>`
+                    : ""}
                   <div class="page__content-copyright">
                     <p>${context.book.type}</p>
-                    <p>Bulgaria - XXI</p>
+                    <p>${context.book.year}Bulgaria - XXI</p>
                   </div>
                 </div>
               </div>
@@ -209,6 +225,8 @@ export class BookViewer extends HTMLElement {
 
     decorateAsStateProperty(this, "isLoading", false);
     decorateAsStateProperty(this, "book", null);
+    decorateAsStateProperty(this, "errorMessage", null);
+    decorateAsStateProperty(this, "successMessage", null);
     decorateAsStateProperty(this, "auth", Store.getState().auth);
     this.id = id;
     Store.subscribe((action) => {
@@ -231,6 +249,7 @@ export class BookViewer extends HTMLElement {
 
   getBook = () => {
     this.isLoading = true;
+    this.successMessage = null;
     if (!this.auth.isLoggedIn) {
       this.errorMessage = "You must be logged in to get a book!";
       redirect("/login");
@@ -244,9 +263,15 @@ export class BookViewer extends HTMLElement {
       body: formData,
     })
       .then((resp) => resp.json())
-      .then((json) => (this.book = json.book))
-      .catch(console.log);
-    this.isLoading = false;
+      .then((json) => {
+        if (json.success) {
+          this.successMessage = json.message;
+        }
+      })
+      .catch(console.log)
+      .finally(() => {
+        this.isLoading = false;
+      });
   };
 }
 

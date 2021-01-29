@@ -197,6 +197,40 @@ const signupTemplate = (context) => {
           background: #cccccc;
           color: #666666;
         }
+        @media screen and (max-width: 1550px) {
+          .log-in {
+            width: 40vw;
+          }
+          .submit-button {
+            margin-top: 10%;
+          }
+          #sign,
+          #up {
+            z-index: 1;
+          }
+        }
+        @media screen and (max-width: 740px) {
+          .log-in {
+            width: 70vw;
+          }
+          .submit-button {
+            margin-top: 6%;
+          }
+          #sign,
+          #up {
+            z-index: 1;
+          }
+        }
+        @media screen and (max-width: 740px) {
+          .log-in {
+            width: 80vw;
+          }
+          #sign,
+          #up {
+            bottom: 70%;
+            z-index: 1;
+          }
+        }
       </style>
       ${spinner(context.isLoading)}
       <h1 id="sign">Sign</h1>

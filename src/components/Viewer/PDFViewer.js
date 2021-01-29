@@ -7,6 +7,7 @@ import {
   parse,
   Store,
 } from "../../utils/";
+import { spinner } from "../Loading/Spinner";
 
 const render = (self) => {
   const state = self.state;
@@ -116,9 +117,15 @@ const PDFViewerTemplate = (context) => html`
       background-color: #ffffff;
     }
   </style>
+  ${spinner(context.isLoading)}
   <div id="my-pdf-viewer">
     <div id="canvas-container">
-      <canvas id="pdf-renderer"></canvas>
+      <canvas
+        @mousemove=${context.mouseMove}
+        @mousedown=${context.mouseDown}
+        @mouseup=${context.mouseUp}
+        id="pdf-renderer"
+      ></canvas>
     </div>
 
     <div id="navigation-controls">
@@ -162,6 +169,7 @@ export class PDFViewer extends HTMLElement {
 
   connectedCallback() {
     nextTick(() => {
+      this.isLoading = true;
       pdfjsLib
         .getDocument(
           parse(
@@ -176,7 +184,13 @@ export class PDFViewer extends HTMLElement {
           this.state.pdf = pdf;
           render(this);
         })
-        .catch(console.log);
+        .catch(console.log)
+        .finally(() => {
+          this.isLoading = false;
+        });
+      this.ctx = this.shadowRoot
+        .getElementById("pdf-renderer")
+        .getContext("2d");
     });
   }
 
@@ -205,10 +219,8 @@ export class PDFViewer extends HTMLElement {
   pageChangeByNumber = (e) => {
     if (this.state.pdf == null) return;
 
-    // Get key code
     const code = e.keyCode ? e.keyCode : e.which;
 
-    // If key code matches that of the Enter key
     if (code == 13) {
       const desiredPage = this.shadowRoot.getElementById("current-page")
         .valueAsNumber;
@@ -226,24 +238,20 @@ export class PDFViewer extends HTMLElement {
   };
 
   copyToClipboard = (e) => {
+    this.isLoading = true;
     fetch(parse("quote", new URLSearchParams({ id: this.id })))
       .then((data) => data.json())
       .then((json) => {
         const aux = document.createElement("input");
 
-        // Assign it the value of the specified element
         aux.setAttribute("value", json.quote);
 
-        // Append it to the body
         document.body.appendChild(aux);
 
-        // Highlight its content
         aux.select();
 
-        // Copy the highlighted text
         document.execCommand("copy");
 
-        // Remove it from the body
         document.body.removeChild(aux);
         this.shadowRoot.getElementById("quote-button").classList.add("tooltip");
 
@@ -253,8 +261,28 @@ export class PDFViewer extends HTMLElement {
             .classList.remove("tooltip");
         }, 2000);
       })
-      .catch(console.log);
-    // Create a "hidden" input
+      .catch(console.log)
+      .finally(() => {
+        this.isLoading = false;
+      });
+  };
+
+  mouseUp = (e) => {
+    this.painting = false;
+    this.ctx.beginPath();
+    this.mouseMove(e);
+  };
+  mouseDown = (e) => {
+    this.painting = true;
+  };
+  mouseMove = (e) => {
+    if (!this.painting) return;
+    this.ctx.lineWidth = 10;
+    this.ctx.lineCap = "round";
+    this.ctx.lineTo(e.clientX, e.clientY);
+    this.ctx.stroke();
+    this.ctx.beginPath();
+    this.ctx.moveTo(e.clientX, e.clientY);
   };
 }
 
