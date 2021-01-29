@@ -4,12 +4,11 @@ import {
   decorateAsComponent,
   decorateAsStateProperty,
   getBooks,
-  nextTick,
-  parse,
   redirect,
 } from "../utils/";
 
 import { Store } from "../utils/store/store";
+import { spinner } from "./Loading/Spinner";
 
 const printResourcesInfo = (arrOfBooks) =>
   arrOfBooks.map(
@@ -361,6 +360,7 @@ const libraryTemplate = (context) => html`
       float: right;
     }
   </style>
+  ${spinner(context.isLoading)}
   <h1 class="floating">Library</h1>
   <div class="body">
     <div class="library">
@@ -428,12 +428,6 @@ export class Library extends HTMLElement {
     });
   }
 
-  connectedCallback() {
-    if (this.resources.length) {
-      document.documentElement.scrollTop = 2 * window.innerHeight;
-    }
-  }
-
   handleButtonClick = (e) => {
     if (this.type === e.target.name) {
       this.type = "";
@@ -444,7 +438,6 @@ export class Library extends HTMLElement {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.isLoading = true;
     this.resources = [];
     const inputs = Array.from(
       this.shadowRoot
@@ -476,9 +469,7 @@ export class Library extends HTMLElement {
     // const query = Object.keys(data)
     //   .map((k) => esc(k) + "=" + esc(data[k]))
     //   .join("&");
-    getBooks(data);
-    document.documentElement.scrollTop = window.innerHeight;
-    this.isLoading = false;
+    getBooks(data, this);
   };
 }
 

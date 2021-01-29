@@ -74,6 +74,28 @@ const homePageTemplate = (context) => html`
       color: #000000;
       background-color: #ffffff;
     }
+    #have-fun {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .new {
+      opacity: 0;
+    }
+
+    .old,
+    .new {
+      transition: opacity 0.5s linear;
+      position: absolute;
+    }
+
+    .wrap:hover .old {
+      opacity: 0;
+    }
+    .wrap:hover .new {
+      opacity: 1;
+    }
   </style>
   <section>
     <div id="first">
@@ -142,7 +164,13 @@ const homePageTemplate = (context) => html`
     <div class="buttons">
       <a href="/about" is="nav-anchor">About Us</a>
       <a href="/contacts" is="nav-anchor">Contact</a>
-      <a href="/signup" is="nav-anchor">Sign Up 🐔</a>
+      <a href="/signup" is="nav-anchor" id="have-fun"
+        >Sign Up
+        <div class="wrap">
+          <div class="new">🥚</div>
+          <div class="old">🐔</div>
+        </div></a
+      >
     </div>
   </section>
 `;

@@ -4,17 +4,131 @@ import { decorateAsComponent, decorateAsStateProperty } from "../../utils/";
 
 const contactsTemplate = (context) => html`
   <style>
-    svg {
-      height: 22px;
-      margin-bottom: -3px;
-      margin-right: 10px;
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .contact {
+      position: relative;
+      min-height: 60vh;
+      padding: 50px 20%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-direction: column;
+    }
+    .contact .content {
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .contact .content h2 {
+      font-size: 36px;
+      font-weight: 500;
+    }
+    .contact .content p {
+      font-weight: 500;
+    }
+    .container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+    }
+    .container .contact-info {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+    }
+    .container .contact-info .box {
+      position: relative;
+      padding: 20px 0;
+      display: flex;
+    }
+    .container .contact-info .box .icon {
+      height: 60px;
+      min-width: 60px;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      font-size: 22px;
+    }
+    .container .contact-info .box .text {
+      display: flex;
+      margin-left: 20px;
+      font-size: 16px;
+      flex-direction: column;
+      font-weight: 300;
+    }
+    .container .contact-info .box .text a {
+      color: #00bcd4;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .contact-form {
+      width: 40%;
+      padding: 40px;
+      background: white;
+    }
+    .contact-form h2 {
+      font-size: 30px;
+      color: #333;
+      font-weight: 500;
+    }
+    .contact-form .input-box {
+      position: relative;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .contact-form .input-box input,
+    .contact-form .input-box textarea {
+      padding: 5px 0;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 16px;
+      border: none;
+      border-bottom: 2px solid #333;
+      resize: none;
+      background: transparent;
+    }
+    .contact-form .input-box span {
+      position: absolute;
+      left: 0;
+      margin: 10px 0;
+      font-size: 16px;
+      padding: 5px 0;
+      pointer-events: none;
+      transition: 0.5s;
+      color: #666;
+    }
+    .contact-form .input-box input:focus ~ span,
+    .contact-form .input-box input:valid ~ span,
+    .contact-form .input-box textarea:focus ~ span,
+    .contact-form .input-box textarea:valid ~ span {
+      color: #e91e63;
+      font-size: 12px;
+      transform: translateY(-20px);
+    }
+    .contact-form .input-box input[type="submit"] {
+      width: 100px;
+      background: #00bcd4;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      font-size: 18px;
     }
   </style>
   <section>
     <div class="contact">
       <div class="content">
         <h2>Contact Us</h2>
-        <p>Ad culpa do deserunt cillum consectetur eu ullamco.</p>
+        <p>
+          Ad culpa do deserunt cillum consectetur eu ullamcoConsequat cillum id
+          ea do occaecat..
+        </p>
       </div>
       <div class="container">
         <div class="contact-info">
@@ -27,7 +141,11 @@ const contactsTemplate = (context) => html`
               </svg>
             </div>
             <div class="text">
-              <h3>Address</h3>
+              <a
+                href="https://www.google.com/maps/place/1700+Studentski+grad,+Sofia/@42.6542685,23.3484032,17z/data=!3m1!4b1!4m5!3m4!1s0x40aa8422f4fe9815:0x227b1c46f061e819!8m2!3d42.6541867!4d23.3514271"
+                target="_blank"
+                >Address</a
+              >
               <p>Somewher, <br />Some City, <br />Some Postcode</p>
             </div>
           </div>
@@ -40,7 +158,7 @@ const contactsTemplate = (context) => html`
               </svg>
             </div>
             <div class="text">
-              <h3>Email</h3>
+              <a href="mailto: Email@email.email">Email</a>
               <p>Email@email.email</p>
             </div>
           </div>
@@ -53,16 +171,31 @@ const contactsTemplate = (context) => html`
               </svg>
             </div>
             <div class="text">
-              <h3>Phone</h3>
+              <a href="tel:+496170961709">Phone</a>
               <p>088something</p>
             </div>
           </div>
         </div>
-      </div>
-      <div class="contact-form">
-        <form>
-          <h2>Send Message</h2>
-        </form>
+        <div class="contact-form">
+          <form @submit=${context.handleSubmit}>
+            <h2>Send Message</h2>
+            <div class="input-box">
+              <input type="text" name="full-name" id="full-name" required />
+              <span>Full name</span>
+            </div>
+            <div class="input-box">
+              <input type="text" name="email" id="email" required />
+              <span>Email</span>
+            </div>
+            <div class="input-box">
+              <textarea name="message" id="message" required></textarea>
+              <span>Type your message</span>
+            </div>
+            <div class="input-box">
+              <input type="submit" name="submit" id="submit" value="Send" />
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </section>
@@ -79,6 +212,10 @@ export class Contacts extends HTMLElement {
 
     decorateAsStateProperty(this, "isLoading", false);
   }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+  };
 }
 
 customElements.define(Contacts.selector, Contacts);

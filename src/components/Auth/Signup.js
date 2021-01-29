@@ -7,6 +7,7 @@ import {
   parse,
 } from "../../utils/";
 import { Store } from "../../utils/store/store";
+import { spinner } from "../Loading/Spinner";
 
 const signupTemplate = (context) => {
   if (!Store.getState().auth.isLoggedIn) {
@@ -19,6 +20,7 @@ const signupTemplate = (context) => {
         }
 
         .log-in {
+          position: relative;
           width: 20vw;
           height: 75vh;
           margin: 5vh 0;
@@ -84,7 +86,6 @@ const signupTemplate = (context) => {
           display: block;
           border-bottom: 1px solid #b3b3b3;
           margin-bottom: 30px;
-          width: 90%;
         }
         .form-group svg {
           height: 22px;
@@ -179,7 +180,25 @@ const signupTemplate = (context) => {
         .failure {
           color: #ffcccb;
         }
+        .pizza {
+          transform: translateY(-500%) rotate(-60deg);
+          width: 100px;
+          opacity: 0;
+          right: 0;
+          position: absolute;
+          transition: 1s;
+        }
+        .pizza:hover {
+          opacity: 1;
+        }
+        .submit-button:disabled,
+        .submit-button:disabled:hover {
+          border: 1px solid #999999;
+          background: #cccccc;
+          color: #666666;
+        }
       </style>
+      ${spinner(context.isLoading)}
       <h1 id="sign">Sign</h1>
       <h1 id="up" class="horizontal" @click=${context.haveFun}>Up</h1>
       <div class="body">
@@ -187,6 +206,11 @@ const signupTemplate = (context) => {
           <div class="logo"></div>
           <div class="title">IT Library</div>
           <div class="sub-title">Signup</div>
+          <div class="pizza">
+            <input type="checkbox" name="pizza" id="pizza" /><label for="pizza"
+              >Pizza?</label
+            >
+          </div>
           <form id="register-form" @submit=${context.handleSubmit}>
             <div class="form-group">
               <svg class="svg-icon" viewBox="0 0 20 20">
@@ -248,6 +272,7 @@ const signupTemplate = (context) => {
                 autocomplete="off"
               />
             </div>
+
             ${context.successMessage
               ? html`<div class="info-message success">
                   ${context.successMessage}
@@ -278,7 +303,7 @@ export class Signup extends HTMLElement {
     this.attachShadow({ mode: "open" });
     decorateAsComponent(this, signupTemplate);
 
-    decorateAsStateProperty(this, "isLoading", false);
+    decorateAsStateProperty(this, "isLoading", true);
     decorateAsStateProperty(this, "errorMessage", null);
     decorateAsStateProperty(this, "successMessage", null);
     decorateAsStateProperty(this, "rand", Math.random() * 60 + 120);
@@ -288,6 +313,7 @@ export class Signup extends HTMLElement {
     e.preventDefault();
     this.errorMessage = null;
     this.successMessage = null;
+    this.isLoading = true;
     const inputs = Array.from(
       this.shadowRoot
         .getElementById("register-form")
@@ -298,6 +324,7 @@ export class Signup extends HTMLElement {
       let { value, name } = input;
       formData.append(name, value);
     }
+    // formData.append("pizza", this.shadowRoot.getElementById("pizza").checked);
     fetch(parse("signup"), {
       method: "POST",
       body: formData,
@@ -313,7 +340,10 @@ export class Signup extends HTMLElement {
           this.errorMessage = resp.message;
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        this.isLoading = false;
+      });
   };
 
   haveFun = () => {
@@ -327,6 +357,10 @@ export class Signup extends HTMLElement {
       }
     }
   };
+
+  connectedCallback() {
+    this.isLoading = false;
+  }
 }
 
 customElements.define(Signup.selector, Signup);

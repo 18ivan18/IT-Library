@@ -7,6 +7,7 @@ import {
   redirect,
 } from "../../utils/";
 import { Store } from "../../utils/store/store";
+import { spinner } from "../Loading/Spinner";
 
 const bookViewerTemplate = (context) => {
   if (context.book) {
@@ -140,6 +141,7 @@ const bookViewerTemplate = (context) => {
           box-shadow: 10px 10px 8px #888888;
         }
       </style>
+      ${spinner(context.isLoading)}
       <div class="body">
         <div class="cover">
           <div class="book">
@@ -218,14 +220,15 @@ export class BookViewer extends HTMLElement {
 
   connectedCallback() {
     this.isLoading = true;
-    fetch(parse("book") + `/${this.id}`)
+    fetch(parse("book", new URLSearchParams({ id: this.id })))
       .then((resp) => resp.json())
       .then((json) => (this.book = json.book))
-      .catch(console.log);
-    this.isLoading = false;
+      .catch(console.log)
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
-  // TODO: send POST request to buyBook.php with parameters username and book id named id
   getBook = () => {
     this.isLoading = true;
     if (!this.auth.isLoggedIn) {

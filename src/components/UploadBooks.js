@@ -3,6 +3,7 @@ import { html } from "lit-html";
 import { decorateAsComponent, decorateAsStateProperty, parse } from "../utils/";
 import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
+import { spinner } from "./Loading/Spinner";
 
 const uploadBooksTemplate = (context) => {
   if (Store.getState().auth.isLoggedIn) {
@@ -125,6 +126,12 @@ const uploadBooksTemplate = (context) => {
             #238d76
           );
         }
+        .submit-button:disabled,
+        .submit-button:disabled:hover {
+          border: 1px solid #999999;
+          background: #cccccc;
+          color: #666666;
+        }
         .info-message {
           margin-top: 10%;
           text-align: center;
@@ -138,6 +145,7 @@ const uploadBooksTemplate = (context) => {
           color: red;
         }
       </style>
+      ${spinner(context.isLoading)}
       <div class="body">
         <div class="log-in">
           <div class="logo"></div>
@@ -168,9 +176,14 @@ const uploadBooksTemplate = (context) => {
               </div>
             </div>
             <button class="submit-button">Upload</button>
-            ${context.fileUploaded
+            ${context.successMessage
               ? html`<div class="info-message success">
-                  ${context.filename} uploaded
+                  ${context.successMessage}
+                </div>`
+              : ""}
+            ${context.errorMessage
+              ? html`<div class="info-message failure">
+                  ${context.errorMessage}
                 </div>`
               : ""}
           </form>
@@ -189,10 +202,11 @@ export class UploadBooks extends HTMLElement {
     this.attachShadow({ mode: "open" });
     decorateAsComponent(this, uploadBooksTemplate);
 
-    decorateAsStateProperty(this, "isLoading", false);
+    decorateAsStateProperty(this, "isLoading", true);
     decorateAsStateProperty(this, "file", null);
-    decorateAsStateProperty(this, "fileUploaded", false);
     decorateAsStateProperty(this, "filename", null);
+    decorateAsStateProperty(this, "errorMessage", null);
+    decorateAsStateProperty(this, "successMessage", null);
   }
 
   handleUpload = (e) => {
@@ -207,12 +221,13 @@ export class UploadBooks extends HTMLElement {
     })
       .then((response) => response.json())
       .then((result) => {
-        this.fileUploaded = true;
-        console.log("Success:", result);
+        if (result.success) {
+          this.successMessage = `${this.filename} uploaded!`;
+        } else {
+          this.errorMessage = resp.message;
+        }
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      })
+      .catch(console.log)
       .finally(() => {
         this.isLoading = false;
       });
@@ -237,6 +252,10 @@ export class UploadBooks extends HTMLElement {
   handleDragover = (e) => {
     e.preventDefault();
   };
+
+  connectedCallback() {
+    this.isLoading = false;
+  }
 }
 
 customElements.define(UploadBooks.selector, UploadBooks);

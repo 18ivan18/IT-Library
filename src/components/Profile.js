@@ -7,12 +7,13 @@ import {
   isLate,
   parse,
   getBooks,
+  getDateFormat,
 } from "../utils";
 import { Store } from "../utils/store/store";
 import { redirect } from "../utils";
+import { spinner } from "./Loading/Spinner";
 
-// TODO: Format the dates
-const bookHistoryTemplate = ({ book, returnBook }) => html`<div class="title">
+const bookHistoryTemplate = ({ book, context }) => html`<div class="title">
     <img src=${book.coverURL} alt="book cover image" />
     <a href="/books/${book.id}" is="nav-anchor">${book.name}</a>
   </div>
@@ -21,7 +22,7 @@ const bookHistoryTemplate = ({ book, returnBook }) => html`<div class="title">
       is="nav-anchor"
       href="library"
       @click=${(e) => {
-        getBooks({ author: book.author });
+        getBooks({ author: book.author }, context);
       }}
       >${book.author}</a
     >
@@ -29,32 +30,43 @@ const bookHistoryTemplate = ({ book, returnBook }) => html`<div class="title">
   ${ifThen(
     book.dateReturned,
     html` <p class="history-info">
-      You took on the ${Date(book.dateTaken).toLocaleString()} and returned it
-      on the ${Date(book.dateReturned).toLocaleString()}. You can no longer read
-      it.
+      You took on the ${getDateFormat(new Date(book.dateTaken))} and returned it
+      on the ${getDateFormat(new Date(book.dateReturned))}. You can no longer
+      read it.
     </p>`
   )}
   ${ifThen(
     !book.dateReturned && isLate(book.dateTaken, book.daysToBeHeld),
-    html`<p class="history-info late">
-      You are late! You should've returned the book at
-      ${new Date(
-        +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
-      )}.
-      Return ${book.name} as soon as possible.
-
-      <button @click=${() => returnBook(book.id)}>Return the book!</button>
-    </p>`
+    html`<div class="history-info ">
+      <p class="late">
+        You are late! You should've returned the book at
+        ${getDateFormat(
+          new Date(
+            +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
+          )
+        )}.
+        Return ${book.name} as soon as possible.
+      </p>
+      <button @click=${() => context.returnBook(book.id)}>
+        Return the book!
+      </button>
+    </div>`
   )}
   ${ifThen(
     !book.dateReturned && !isLate(book.dateTaken, book.daysToBeHeld),
     html`<div class="history-info">
-      ${book.name} can still be read until
-      ${new Date(
-        +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
-      )}
+      <p>
+        ${book.name} can still be read until
+        ${getDateFormat(
+          new Date(
+            +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
+          )
+        )}
+      </p>
       <button @click=${() => redirect(`/view/${book.id}`)}>Read now!</button>
-      <button @click=${() => returnBook(book.id)}>Return the book!</button>
+      <button @click=${() => context.returnBook(book.id)}>
+        Return the book!
+      </button>
     </div>`
   )}`;
 
@@ -96,7 +108,7 @@ const profileTemplate = (context) => {
           margin: 5% 0px;
         }
 
-        .buttons button {
+        button {
           display: inline-block;
           padding: 0.35em 2.3em;
           border: 0.05em solid #ffffff;
@@ -113,7 +125,7 @@ const profileTemplate = (context) => {
           cursor: pointer;
         }
 
-        .buttons button:hover {
+        button:hover {
           color: #000000;
           background-color: #ffffff;
         }
@@ -165,6 +177,7 @@ const profileTemplate = (context) => {
           height: 150px;
         }
       </style>
+      ${spinner(context.isLoading)}
       <div class="container">
         <div class="personal-info">
           <h3>Personal details</h3>
@@ -186,7 +199,7 @@ const profileTemplate = (context) => {
           </div>
           <div class="buttons">
             <button @click=${() => redirect("/import")}>Upload books 📚</button>
-            <button>Order pizza 🍕</button>
+            <button @click=${context.orderPizza}>Order pizza 🍕</button>
             <button>Update profile 👨‍🏫</button>
           </div>
         </div>
@@ -195,7 +208,7 @@ const profileTemplate = (context) => {
           <h3 class="th">Author</h3>
           <h3 class="th">Info</h3>
           ${context.history.map((book) =>
-            bookHistoryTemplate({ book, returnBook: context.returnBook })
+            bookHistoryTemplate({ book, context })
           )}
         </div>
       </div>
@@ -224,6 +237,15 @@ export class Profile extends HTMLElement {
     });
   }
 
+  orderPizza = (e) => {
+    if (this.auth.user.pizza) {
+      window.open(
+        "https://www.dominos.bg/menu/sofia-student-city#deals",
+        "_blank"
+      );
+    }
+  };
+
   getHistory = () => {
     this.isLoading = true;
     fetch(
@@ -236,12 +258,16 @@ export class Profile extends HTMLElement {
       .then((json) => {
         this.history = json.history;
       })
-      .catch(console.log);
-    this.isLoading = false;
+      .catch(console.log)
+      .finally(() => {
+        this.isLoading = false;
+      });
   };
 
   connectedCallback() {
-    this.getHistory();
+    if (this.auth.isLoggedIn) {
+      this.getHistory();
+    }
   }
 
   returnBook = (id) => {
@@ -259,8 +285,10 @@ export class Profile extends HTMLElement {
           this.getHistory();
         }
       })
-      .catch(console.log);
-    this.isLoading = false;
+      .catch(console.log)
+      .finally(() => {
+        this.isLoading = false;
+      });
   };
 }
 

@@ -7,6 +7,7 @@ import {
   redirect,
 } from "../../utils/";
 import { Store } from "../../utils/store/store";
+import { spinner } from "../Loading/Spinner";
 
 const loginTemplate = (context) => html`
   <style>
@@ -45,6 +46,14 @@ const loginTemplate = (context) => html`
       border-radius: 50%;
       margin: 0 auto;
       box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      transition: 2s;
+    }
+
+    .runawayUp {
+      transform: translateY(-1500%);
+    }
+    .runawayDown {
+      transform: translateY(200%);
     }
 
     .title {
@@ -131,6 +140,12 @@ const loginTemplate = (context) => html`
         #238d76
       );
     }
+    .submit-button:disabled,
+    .submit-button:disabled:hover {
+      border: 1px solid #999999;
+      background: #cccccc;
+      color: #666666;
+    }
     .link {
       text-align: center;
       padding-top: 20px;
@@ -172,11 +187,13 @@ const loginTemplate = (context) => html`
       color: #ffcccb;
     }
   </style>
+
+  ${spinner(context.isLoading)}
   <h1 id="log">Log</h1>
   <h1 id="in">In</h1>
   <div class="body">
     <div class="log-in">
-      <div class="logo"></div>
+      <div class="logo" id="flying-logo" @click=${context.haveFun}></div>
       <div class="title">IT Library</div>
       <div class="sub-title">login</div>
       <form @submit="${context.submitHandler}" id="login-form">
@@ -222,7 +239,11 @@ const loginTemplate = (context) => html`
         <button class="submit-button" ?disabled=${context.isLoading}>
           Login
         </button>
-        <div class="link"><a href="#" is="nav-anchor">Forgot password?</a></div>
+        <div class="link">
+          <a href="#" is="nav-anchor" @click=${context.back}
+            >Forgot password?</a
+          >
+        </div>
       </form>
     </div>
   </div>
@@ -240,6 +261,10 @@ export class Login extends HTMLElement {
     decorateAsStateProperty(this, "errorMessage", null);
     decorateAsStateProperty(this, "successMessage", null);
   }
+
+  back = (e) => {
+    this.shadowRoot.getElementById("flying-logo").classList.remove("runawayUp");
+  };
 
   submitHandler = (e) => {
     e.preventDefault();
@@ -271,13 +296,23 @@ export class Login extends HTMLElement {
           this.successMessage = "Logged in successfully";
           setTimeout(() => {
             redirect("/profile");
-          }, 1000);
+          }, 500);
         } else {
           this.errorMessage = resp.message;
         }
       })
       .catch((err) => console.log(err))
       .finally(() => (this.isLoading = false));
+  };
+
+  haveFun = (e) => {
+    const target = e.target;
+    target.classList.add("runawayDown");
+    setTimeout(() => {
+      console.log("dfgsd");
+      target.classList.remove("runawayDown");
+      target.classList.add("runawayUp");
+    }, 2000);
   };
 }
 

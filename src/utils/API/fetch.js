@@ -1,5 +1,6 @@
-import { Store, parse } from "../";
-export const getBooks = (urlParams) => {
+import { Store, parse, nextTick } from "../";
+export const getBooks = (urlParams, self) => {
+  self.isLoading = true;
   fetch(parse("/", new URLSearchParams(urlParams)))
     .then((data) => data.json())
     .then((resources) => {
@@ -9,6 +10,10 @@ export const getBooks = (urlParams) => {
           resources,
         },
       });
+      nextTick(() => (document.documentElement.scrollTop = window.innerHeight));
     })
-    .catch((err) => console.log(err));
+    .catch(console.log)
+    .finally(() => {
+      self.isLoading = false;
+    });
 };

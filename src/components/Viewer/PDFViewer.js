@@ -93,6 +93,27 @@ const PDFViewerTemplate = (context) => html`
       border-top-color: var(--tooltip-color);
       transform-origin: top center;
     }
+    button {
+      display: inline-block;
+      padding: 0.35em 2.3em;
+      border: 0.05em solid #ffffff;
+      margin: 0 0.3em 0.3em 0;
+      border-radius: 0.5em;
+      box-sizing: border-box;
+      text-decoration: none;
+      font-family: "Roboto", sans-serif;
+      font-weight: 300;
+      background-color: lightgray;
+      color: #ffffff;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #000000;
+      background-color: #ffffff;
+    }
   </style>
   <div id="my-pdf-viewer">
     <div id="canvas-container">

@@ -1,5 +1,6 @@
 export const redirect = (path = "/") => {
   if (path === getCurrentURL()) return;
+  // const baseUrl = window.location.origin;
   history.pushState(null, "", path);
   window.dispatchEvent(new Event("navigate"));
   document.documentElement.scrollTop = 0;
@@ -24,4 +25,34 @@ export const scroll = () => {
     left: 100,
     behavior: "smooth",
   });
+};
+
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+export const getDateFormat = (dateObj) => {
+  let result = dateObj.getDay();
+  const lastDigit = parseInt(dateObj.getDay()) % 10;
+  if (lastDigit === 1) {
+    result += "st";
+  } else if (lastDigit === 2) {
+    result += "nd";
+  } else if (lastDigit === 3) {
+    result += "rd";
+  } else {
+    result += "th";
+  }
+  result += ` of ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`;
+  return result;
 };

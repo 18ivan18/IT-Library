@@ -1,9 +1,6 @@
 import { html } from "lit-html";
-// import { ifThen } from './directives/if-then.js';
-import { Store } from "../utils/store/store";
 
-import { decorateAsComponent } from "../utils/decorate-as-component.js";
-import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js";
+import { decorateAsComponent } from "../utils/";
 
 const footerTemplate = (context) => html` <style>
     *,

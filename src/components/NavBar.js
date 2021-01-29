@@ -5,6 +5,7 @@ import { decorateAsStateProperty } from "../utils/decorate-as-state-property.js"
 import { Store } from "../utils/store/store";
 import { NavAnchor } from "../components/CustomElements/NavAnchor";
 import { getBooks, redirect } from "../utils/index.js";
+import { spinner } from "./Loading/Spinner.js";
 
 const navBarTemplate = (context) => html`
   <style>
@@ -74,18 +75,42 @@ const navBarTemplate = (context) => html`
       width: 200px;
       height: 25px;
     }
+    @media screen and (max-width: 1175px) {
+      #home,
+      #about,
+      #contact {
+        display: none;
+      }
+    }
+    @media screen and (max-width: 1175px) {
+      #home,
+      #about,
+      #contact,
+      #books-and-people,
+      #search-form,
+      #statistics {
+        display: none;
+      }
+      nav {
+        display: flex;
+        justify-content: space-around;
+      }
+    }
   </style>
+  ${spinner(context.isLoading)}
   <header>
     <nav>
       <a class="image-container" href="/" is="nav-anchor"
         ><img src="https://cdn.logo.com/hotlink-ok/logo-social-sq.png"
       /></a>
-      <a href="/" is="nav-anchor">Home</a>
-      <a href="/library" is="nav-anchor">Books and People</a>
-      <a href="/statistics" is="nav-anchor">Statistics</a>
-      <a href="/about" is="nav-anchor">About</a>
-      <a href="/contacts" is="nav-anchor">Contact us</a>
-      <form @submit=${context.handleSubmit}>
+      <a id="home" href="/" is="nav-anchor">Home</a>
+      <a id="books-and-people" href="/library" is="nav-anchor"
+        >Books and People</a
+      >
+      <a id="statistics" href="/statistics" is="nav-anchor">Statistics</a>
+      <a id="about" href="/about" is="nav-anchor">About</a>
+      <a id="contact" href="/contacts" is="nav-anchor">Contact us</a>
+      <form @submit=${context.handleSubmit} id="search-form">
         <input
           id="search-input"
           type="text"
@@ -101,7 +126,7 @@ const navBarTemplate = (context) => html`
           />
         </button>
       </form>
-      <div class="credentials-container">
+      <div id="credentials-container" class="credentials-container">
         ${context.auth.isLoggedIn
           ? html`<a href="/profile" is="nav-anchor">Hello, ${context.auth.user.name}</a>
               <a href="/" @click=${context.handleLogout} is="nav-anchor">Logout</button> `
@@ -121,6 +146,7 @@ export class Navbar extends HTMLElement {
 
     decorateAsComponent(this, navBarTemplate);
     decorateAsStateProperty(this, "auth", Store.getState().auth);
+    decorateAsStateProperty(this, "isLoading", false);
     Store.subscribe((action) => {
       if (action.type === "LOGIN" || action.type === "LOGOUT") {
         this.auth = Store.getState().auth;
@@ -137,7 +163,10 @@ export class Navbar extends HTMLElement {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    getBooks({ title: this.shadowRoot.getElementById("search-input").value });
+    getBooks(
+      { title: this.shadowRoot.getElementById("search-input").value },
+      this
+    );
     this.shadowRoot.getElementById("search-input").value = "";
     redirect("library");
   };
