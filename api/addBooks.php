@@ -4,10 +4,19 @@
 	header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
 	header("Access-Control-Max-Age: 3600");
 	header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-	$username = $_POST["username"];
+	require_once('database.php');
+	$db = new database();
 	$csv = $_FILES["csv"]['tmp_name'];
-	$myfile = fopen($csv, "r") or die("Unable to open file!");
-	$data = fread($myfile, filesize($csv));
+	$myfile = fopen($csv, "r");
+	if (!$myfile){
+		echo json_encode(['success' => false,'message' => 'Could not upload the file']);
+	}
+	$JSONArray = array();
+	while (($line = fgetcsv($myfile, 1000, ",")) !== FALSE) {
+	$data = array($line[0],$line[1],$line[2],$line[3],$line[4],$line[5],$line[6],$line[7],$line[8]);
+	$db->addBook($data);
+	}
+	echo json_encode(['success'=>true]);
 	fclose($myfile);
-	echo json_encode([$username, "data" => $data]);
+
 ?>
