@@ -5,6 +5,7 @@ import {
   decorateAsStateProperty,
   nextTick,
   parse,
+  Store,
 } from "../../utils/";
 
 const render = (self) => {
@@ -150,6 +151,7 @@ export class PDFViewer extends HTMLElement {
 
     decorateAsComponent(this, PDFViewerTemplate);
     decorateAsStateProperty(this, "isLoading", false);
+    decorateAsStateProperty(this, "auth", Store.getState().auth);
     decorateAsStateProperty(this, "state", {
       pdf: null,
       currentPage: 1,
@@ -160,14 +162,21 @@ export class PDFViewer extends HTMLElement {
 
   connectedCallback() {
     nextTick(() => {
-      // TODO: add query parameter id of the book and username
       pdfjsLib
-        .getDocument(parse("getPDFDocument"))
+        .getDocument(
+          parse(
+            "getPDFDocument",
+            new URLSearchParams({
+              id: this.id,
+              username: this.auth.user.username,
+            })
+          )
+        )
         .then((pdf) => {
           this.state.pdf = pdf;
           render(this);
         })
-        .catch((err) => console.log(err));
+        .catch(console.log);
     });
   }
 
