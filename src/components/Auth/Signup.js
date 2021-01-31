@@ -19,7 +19,7 @@ const signupTemplate = (context) => {
           font-weight: 300;
         }
 
-        .log-in {
+        .register {
           position: relative;
           width: 20vw;
           height: 75vh;
@@ -198,7 +198,7 @@ const signupTemplate = (context) => {
           color: #666666;
         }
         @media screen and (max-width: 1550px) {
-          .log-in {
+          .register {
             width: 40vw;
           }
           .submit-button {
@@ -210,7 +210,7 @@ const signupTemplate = (context) => {
           }
         }
         @media screen and (max-width: 740px) {
-          .log-in {
+          .register {
             width: 70vw;
           }
           .submit-button {
@@ -222,13 +222,17 @@ const signupTemplate = (context) => {
           }
         }
         @media screen and (max-width: 740px) {
-          .log-in {
+          .register {
             width: 80vw;
+            margin: 0 0;
           }
           #sign,
           #up {
             bottom: 70%;
             z-index: 1;
+          }
+          .sub-title {
+            margin-bottom: 15%;
           }
         }
       </style>
@@ -236,7 +240,7 @@ const signupTemplate = (context) => {
       <h1 id="sign">Sign</h1>
       <h1 id="up" class="horizontal" @click=${context.haveFun}>Up</h1>
       <div class="body">
-        <div class="log-in">
+        <div class="register">
           <div class="logo"></div>
           <div class="title">IT Library</div>
           <div class="sub-title">Signup</div>
