@@ -195,15 +195,10 @@ const loginTemplate = (context) => html`
     }
     @media screen and (max-width: 740px) {
       .log-in {
-        width: 70vw;
+        width: 80vw;
       }
       .submit-button {
         margin-top: 10%;
-      }
-    }
-    @media screen and (max-width: 740px) {
-      .log-in {
-        width: 80vw;
       }
     }
   </style>
@@ -284,6 +279,10 @@ export class Login extends HTMLElement {
 
   back = (e) => {
     this.shadowRoot.getElementById("flying-logo").classList.remove("runawayUp");
+    this.shadowRoot
+      .getElementById("flying-logo")
+      .classList.remove("runawayDown");
+    clearTimeout(this.timeout);
   };
 
   submitHandler = (e) => {
@@ -328,7 +327,7 @@ export class Login extends HTMLElement {
   haveFun = (e) => {
     const target = e.target;
     target.classList.add("runawayDown");
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       console.log("dfgsd");
       target.classList.remove("runawayDown");
       target.classList.add("runawayUp");
