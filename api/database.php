@@ -170,13 +170,24 @@ class database{
 	}
 	public function quoteBook($data){
 		$id = $data;
-		$stmt = $this->connection->prepare("SELECT quote FROM library WHERE ID = ?");
+		$stmt = $this->connection->prepare("SELECT * FROM library WHERE ID = ?");
 		$stmt->bind_param("s",$id);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		if ($result->num_rows > 0){
 			$row = $result->fetch_assoc();
-			return ['quote'=> $row['quote']];
+			if ($row['Type'] == 'book'){
+				$bookQuote = $row['Author'].'.'.$row['Title'].'.'.$row['quote'];
+				return ['quote'=> $bookQuote];
+			}
+			else if ($row['Type'] == 'paper'){
+				$paperQuote = '['.$row['Author'].'], '.$row['Title'].', Available from:'.$row['quote'];
+				return ['quote' => $paperQuote];
+			}
+			else{
+				$magazineQuote = $row['Author'].'('.$row['quote'].'), '.$row['Title'];
+				return ['quote' => $magazineQuote];
+			}
 		}
 	}
 	public function buyBook($idInput,$usernameInput){
@@ -202,7 +213,7 @@ class database{
 		$stmt5 = $this->connection->prepare("UPDATE users SET points = ? WHERE username = ?");
 		$stmt5->bind_param("is", $newPoints, $user);
 		$stmt5->execute();
-		$stmt2 = $this->connection->prepare("INSERT INTO transactions (bookID, buydate, user) VALUES (?,?,?)");
+		$stmt2 = $this->connection->prepare("INSERT INTO transactions (bookID, buydate, user) VALUES (?,now(),?)");
 		$stmt2->bind_param("is", $id,$user);
 		$stmt2->execute();
 		$newCount = $row['Count'] - 1;
