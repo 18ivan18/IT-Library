@@ -220,7 +220,7 @@ class database{
 		$stmt3 = $this->connection->prepare("UPDATE library SET Count = ? WHERE ID = ?");
 		$stmt3->bind_param("ii", $newCount, $id);
 		$stmt3->execute();
-		return ['success' => true];
+		return ['success' => true, 'message' => 'You have successfully bought the book'];
 	}
 }
 ?>
