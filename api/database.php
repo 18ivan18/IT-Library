@@ -6,11 +6,12 @@ class database{
 		$username = "root";
 		$pass = "";
 		$dbname = "project";
-		$this->connection = mysqli_connect('127.0.0.1', 'root', '');
+		$ip = '127.0.0.1';
+		$this->connection = mysqli_connect($ip, $username, $pass);
 		if (!$this->connection){
 			echo "not connected";
 		}
-		if (!mysqli_select_db($this->connection, 'project')){
+		if (!mysqli_select_db($this->connection, $dbname)){
 			echo "cannot get db";
 		}
 	}
