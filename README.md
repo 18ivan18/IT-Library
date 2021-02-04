@@ -27,3 +27,7 @@ This is still a draft version, the core frontend funcitonality is covered, the d
 For the final version we'll finish the import/export system, and finalise the functionality that allows the user to borrow a resource.
 
 The documentaion is not following the template given in the 'Web' FMI course right now, but it'll be updated for the final version of the project.
+
+# Deployment
+
+To make the project ready for production run `npm run build`. This command will generate a folder caleld "dist". Simply copy/paste it in the C:\\xammp\\htdocks folder and run your apache server. Now navigate to localhost/dist/index.html.
