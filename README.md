@@ -18,7 +18,7 @@ If you are missing **npm** check out https://www.npmjs.com/get-npm.
 
 First install the node modules with `npm i` and now you are all set up. Start the development server with the `npm run serve` command. The server will start at either port **[3000](http://localhost:3000/ "localhost:3000")** or `env.PORT`.
 
-# To use the databases, you need to copy the project folder and paste it in xampp/mysql/data. After that php queries to the database will be correct.
+# To use the databases, you need to copy the project folder and ib_logfile0, iblogfile1, ibdata1 and paste it in xampp/mysql/data. After that php queries to the database will be correct.
 
 # Draft version notes
 
