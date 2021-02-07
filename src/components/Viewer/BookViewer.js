@@ -237,6 +237,10 @@ export class BookViewer extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getBookInfo();
+  }
+
+  getBookInfo = () => {
     this.isLoading = true;
     fetch(parse("book", new URLSearchParams({ id: this.id })))
       .then((resp) => resp.json())
@@ -245,7 +249,7 @@ export class BookViewer extends HTMLElement {
       .finally(() => {
         this.isLoading = false;
       });
-  }
+  };
 
   getBook = () => {
     this.isLoading = true;
@@ -266,6 +270,7 @@ export class BookViewer extends HTMLElement {
       .then((json) => {
         if (json.success) {
           this.successMessage = json.message;
+          this.getBookInfo();
         }
       })
       .catch(console.log)

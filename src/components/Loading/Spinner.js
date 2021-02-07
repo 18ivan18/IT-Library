@@ -7,7 +7,7 @@ export const spinner = (loading) => {
         .loader-wrapper {
           width: 100%;
           height: 100%;
-          position: absolute;
+          position: fixed;
           top: 0;
           left: 0;
           background-color: rgba(36, 47, 64, 0.8);

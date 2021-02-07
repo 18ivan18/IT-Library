@@ -279,10 +279,17 @@ export class PDFViewer extends HTMLElement {
     if (!this.painting) return;
     this.ctx.lineWidth = 10;
     this.ctx.lineCap = "round";
-    this.ctx.lineTo(e.clientX, e.clientY);
+    const canvasContainer = this.shadowRoot.getElementById("canvas-container");
+    const pdfRenderer = this.shadowRoot.getElementById("pdf-renderer");
+    const offsetX =
+        -(canvasContainer.offsetWidth - pdfRenderer.offsetWidth) / 2,
+      offsetY = -canvasContainer.offsetTop + canvasContainer.scrollTop;
+    const targetX = e.clientX + offsetX,
+      targetY = e.clientY + offsetY;
+    this.ctx.lineTo(targetX, targetY);
     this.ctx.stroke();
     this.ctx.beginPath();
-    this.ctx.moveTo(e.clientX, e.clientY);
+    this.ctx.moveTo(targetX, targetY);
   };
 }
 
