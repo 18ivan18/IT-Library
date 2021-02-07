@@ -69,7 +69,7 @@ const basicFormRender = (handleSubmit) => html`
     </span>
   </div>
   <div class="form-group">
-    <input type="text" id="author" name="author" placeholder="Autor" autocomplete="off"/>
+    <input type="text" id="author" name="author" placeholder="Author" autocomplete="off"/>
     <span class="exact-match">
       <input type="checkbox" name="authorExactMatch"> Exact Match only
     </span>
@@ -79,8 +79,8 @@ const basicFormRender = (handleSubmit) => html`
    </div>
    
     <select name="sortBy" id="sortBy" class="form-group">
-      <option value="author">Author</option>
-      <option value="title">Title</option>
+      <option value="Author">Author</option>
+      <option value="Title">Title</option>
       <option value="date">Registration Date</option>
     </select>
     <select name="order" id="order" class="form-group">
