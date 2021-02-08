@@ -42,8 +42,8 @@ const monthNames = [
   "December",
 ];
 export const getDateFormat = (dateObj) => {
-  let result = dateObj.getDay();
-  const lastDigit = parseInt(dateObj.getDay()) % 10;
+  let result = dateObj.getDay() + 1;
+  const lastDigit = parseInt(dateObj.getDay() + 1) % 10;
   if (lastDigit === 1) {
     result += "st";
   } else if (lastDigit === 2) {
