@@ -24,32 +24,44 @@ class database{
 		$sortBy = $data[5];
 		$order = $data[6];
 		$type = $data[7];
-		
+	
 		if ($titleExactMatch == 'true'){
 			if ($authorExactMatch == 'true'){
-				if($order == 'Descending'){
+				if($order == 'desc'){
 					$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author = ? and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ? DESC");
 				}
 				else{
-				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author = ? and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ?");
+				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author = ? and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ? ASC");
 				}
 			}
 			else{
-				if ($order == 'Descending'){
+				if ($order == 'desc'){
 					$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ? DESC");
 				}
 				else{
-					$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ?");
+					$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title=? and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ? ASC ");
 				}
 			}
 		}
 		else{
-			if ($order == 'Descending'){
+			if ($authorExactMatch == 'true'){
+			if ($order == 'desc'){
+				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title LIKE CONCAT('%',?,'%') and Author = ? and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ? DESC");
+			}
+			else{
+				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title LIKE CONCAT('%',?,'%') and Author = ? and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ? ASC");
+			}
+			}
+			else{
+				if ($order == 'desc'){
 				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title LIKE CONCAT('%',?,'%') and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ? DESC");
 			}
 			else{
 				$stmt = $this->connection->prepare("SELECT * FROM library WHERE Title LIKE CONCAT('%',?,'%') and Author LIKE CONCAT ('%',?,'%') and Tags LIKE CONCAT ( '%' , ?, '%') and Type LIKE CONCAT ( '%' , ?, '%') ORDER BY ?");
 			}
+			}
+			
+
 		}
 		$stmt->bind_param("sssss", $title, $author, $tag, $type, $sortBy);
 		$stmt->execute();
