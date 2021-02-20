@@ -105,6 +105,8 @@ const aboutTemplate = (context) => html`<style>
     <h1>About Us Page</h1>
     <p>Some text about who we are and what we do.</p>
   </div>
+  <a href="about/us" is="nav-anchor">Us</a>
+  <a href="about/contacts" is="nav-anchor">Contacts</a>
 
   <h2 class="team">Our Team</h2>
 

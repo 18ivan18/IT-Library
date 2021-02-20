@@ -357,15 +357,24 @@ export class Signup extends HTMLElement {
         .getElementById("register-form")
         .getElementsByTagName("input")
     );
-    let formData = new FormData();
+    // let formData = new FormData();
+    // for (const input of inputs) {
+    //   let { value, name } = input;
+    //   formData.append(name, value);
+    // }
+    let data = {};
     for (const input of inputs) {
-      let { value, name } = input;
-      formData.append(name, value);
+      const { value, name } = input;
+      data[name] = value;
     }
+    data["pizza"] = this.shadowRoot.getElementById("pizza").checked;
     // formData.append("pizza", this.shadowRoot.getElementById("pizza").checked);
     fetch(parse("signup"), {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
       .then((resp) => resp.json())
       .then((resp) => {

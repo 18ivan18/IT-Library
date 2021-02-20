@@ -11,4 +11,14 @@ export const parse = (url, query) => {
     }
     return parsed;
   }
+  if (config.api.technology === "js") {
+    if (url === "/") {
+      url = "";
+    }
+    let parsed = config.api.url + url;
+    if (query) {
+      parsed += "?" + query;
+    }
+    return parsed;
+  }
 };

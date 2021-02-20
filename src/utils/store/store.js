@@ -7,8 +7,6 @@ const createStore = (reducer, initialState) => {
   store.listeners = [];
   store.subscribe = (listener) => store.listeners.push(listener);
   store.dispatch = (action) => {
-    // validateAction(action);
-
     store.state = reducer(store.state, action);
     store.listeners.forEach((listener) => listener(action));
   };

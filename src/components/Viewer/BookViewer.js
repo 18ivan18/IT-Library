@@ -242,9 +242,15 @@ export class BookViewer extends HTMLElement {
 
   getBookInfo = () => {
     this.isLoading = true;
-    fetch(parse("book", new URLSearchParams({ id: this.id })))
+    fetch(parse(`books/${this.id}`))
       .then((resp) => resp.json())
-      .then((json) => (this.book = json.book))
+      .then((resp) => {
+        if (resp.success) {
+          this.book = resp.book;
+        } else {
+          this.book = null;
+        }
+      })
       .catch(console.log)
       .finally(() => {
         this.isLoading = false;
@@ -259,12 +265,13 @@ export class BookViewer extends HTMLElement {
       redirect("/login");
       return;
     }
-    const formData = new FormData();
-    formData.append("username", this.auth.user.username);
-    formData.append("id", this.id);
-    fetch(parse("buyBook"), {
+    fetch(parse(`transactions`), {
       method: "POST",
-      body: formData,
+      headers: {
+        "x-access-token": this.auth.token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ bookId: this.id }),
     })
       .then((resp) => resp.json())
       .then((json) => {

@@ -13,6 +13,7 @@ import {
   BookViewer,
   About,
   Contacts,
+  Us,
 } from "./components";
 import { html } from "lit-html";
 import "./main.css";
@@ -44,7 +45,14 @@ const routes = [
   { path: "/view/:id", ctor: PDFViewer },
   { path: "/books/:id", ctor: BookViewer },
   { path: "/contacts", ctor: Contacts },
-  { path: "/about", ctor: About },
+  {
+    path: "/about",
+    ctor: About,
+    children: [
+      { path: "/us", ctor: Us },
+      { path: "/contacts", ctor: Contacts },
+    ],
+  },
 ];
 
 export class App extends HTMLElement {

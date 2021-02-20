@@ -14,8 +14,9 @@ import { redirect } from "../utils";
 import { spinner } from "./Loading/Spinner";
 
 const bookHistoryTemplate = ({ book, context }) => html`<div class="title">
+    ${console.log(book)}
     <img src=${book.coverURL} alt="book cover image" />
-    <a href="/books/${book.id}" is="nav-anchor">${book.name}</a>
+    <a href="/books/${book.BookId}" is="nav-anchor">${book.title}</a>
   </div>
   <div class="author">
     <a
@@ -28,24 +29,25 @@ const bookHistoryTemplate = ({ book, context }) => html`<div class="title">
     >
   </div>
   ${ifThen(
-    book.dateReturned,
+    book.returned,
     html` <p class="history-info">
-      You took on the ${getDateFormat(new Date(book.dateTaken))} and returned it
-      on the ${getDateFormat(new Date(book.dateReturned))}. You can no longer
-      read it.
+      You took on the ${getDateFormat(new Date(book.createdAt))} and returned it
+      on the ${getDateFormat(new Date(book.updatedAt))}. You can no longer read
+      it.
     </p>`
   )}
   ${ifThen(
-    !book.dateReturned && isLate(book.dateTaken, book.daysToBeHeld),
+    !book.returned && isLate(book.createdAt, /*book.daysToBeHeld*/ 20),
     html`<div class="history-info ">
       <p class="late">
         You are late! You should've returned the book at
         ${getDateFormat(
           new Date(
-            +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
+            +new Date(book.createdAt) +
+              /*book.daysToBeHeld*/ 20 * 24 * 60 * 60 * 1000
           )
         )}.
-        Return ${book.name} as soon as possible.
+        Return ${book.title} as soon as possible.
       </p>
       <button @click=${() => context.returnBook(book.id)}>
         Return the book!
@@ -53,17 +55,20 @@ const bookHistoryTemplate = ({ book, context }) => html`<div class="title">
     </div>`
   )}
   ${ifThen(
-    !book.dateReturned && !isLate(book.dateTaken, book.daysToBeHeld),
+    !book.returned && !isLate(book.createdAt, /*book.daysToBeHeld*/ 20),
     html`<div class="history-info">
       <p>
-        ${book.name} can still be read until
+        ${book.title} can still be read until
         ${getDateFormat(
           new Date(
-            +new Date(book.dateTaken) + book.daysToBeHeld * 24 * 60 * 60 * 1000
+            +new Date(book.createdAt) +
+              /*book.daysToBeHeld*/ 20 * 24 * 60 * 60 * 1000
           )
         )}
       </p>
-      <button @click=${() => redirect(`/view/${book.id}`)}>Read now!</button>
+      <button @click=${() => redirect(`/view/${book.BookId}`)}>
+        Read now!
+      </button>
       <button @click=${() => context.returnBook(book.id)}>
         Return the book!
       </button>
@@ -207,7 +212,7 @@ const profileTemplate = (context) => {
             <p class="stats">Website</p>
             <p>${context.auth.user.website}</p>
             <p class="stats">Resources</p>
-            <p>${context.auth.user.points}</p>
+            <p>${context.auth.user.resources}</p>
           </div>
           <div class="buttons">
             <button @click=${() => redirect("/import")}>Upload books 📚</button>
@@ -241,6 +246,7 @@ export class Profile extends HTMLElement {
     decorateAsStateProperty(this, "isLoading", false);
     decorateAsStateProperty(this, "auth", Store.getState().auth);
     decorateAsStateProperty(this, "history", []);
+    decorateAsStateProperty(this, "books", []);
 
     Store.subscribe((action) => {
       if (action.type === "LOGIN" || action.type === "LOGOUT") {
@@ -260,15 +266,16 @@ export class Profile extends HTMLElement {
 
   getHistory = () => {
     this.isLoading = true;
-    fetch(
-      parse(
-        "history",
-        new URLSearchParams({ username: this.auth.user.username })
-      )
-    )
+    fetch(parse("transactions"), {
+      headers: {
+        "x-access-token": this.auth.token,
+      },
+    })
       .then((resp) => resp.json())
-      .then((json) => {
-        this.history = json.history;
+      .then((resp) => {
+        if (resp.success) {
+          this.history = resp.history;
+        } else this.history = [];
       })
       .catch(console.log)
       .finally(() => {
@@ -284,12 +291,13 @@ export class Profile extends HTMLElement {
 
   returnBook = (id) => {
     this.isLoading = true;
-    const formData = new FormData();
-    formData.append("username", this.auth.user.username);
-    formData.append("id", id);
-    fetch(parse("returnBook"), {
-      method: "POST",
-      body: formData,
+    fetch(parse("transactions"), {
+      method: "PUT",
+      headers: {
+        "x-access-token": this.auth.token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
     })
       .then((resp) => resp.json())
       .then((json) => {

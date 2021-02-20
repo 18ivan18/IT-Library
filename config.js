@@ -1,9 +1,10 @@
+const port = 3001;
 export const config = {
   app: {
-    port: 3000,
+    port,
   },
   api: {
-    technology: "php",
-    url: "http://localhost/api/",
+    technology: "js",
+    url: "http://localhost:3000/api/",
   },
 };

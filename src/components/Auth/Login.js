@@ -294,14 +294,22 @@ export class Login extends HTMLElement {
     const inputs = Array.from(
       this.shadowRoot.getElementById("login-form").getElementsByTagName("input")
     );
-    let formData = new FormData();
+    // let formData = new FormData();
+    // for (const input of inputs) {
+    //   let { value, name } = input;
+    //   formData.append(name, value);
+    // }
+    let data = {};
     for (const input of inputs) {
-      let { value, name } = input;
-      formData.append(name, value);
+      const { value, name } = input;
+      data[name] = value;
     }
     fetch(parse("login"), {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
       .then((resp) => resp.json())
       .then((resp) => {
@@ -310,6 +318,7 @@ export class Login extends HTMLElement {
             type: "LOGIN",
             payload: {
               user: resp.user,
+              token: resp.token,
             },
           });
           this.successMessage = "Logged in successfully";
@@ -328,7 +337,6 @@ export class Login extends HTMLElement {
     const target = e.target;
     target.classList.add("runawayDown");
     this.timeout = setTimeout(() => {
-      console.log("dfgsd");
       target.classList.remove("runawayDown");
       target.classList.add("runawayUp");
     }, 2000);

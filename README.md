@@ -33,3 +33,18 @@ The documentaion is not following the template given in the 'Web' FMI course rig
 # Deployment
 
 To make the project ready for production run `npm run build`. This command will generate a folder caleld "dist". Simply copy/paste it in the C:\\xammp\\htdocks folder and run your apache server. Now navigate to localhost/dist/index.html.
+
+# What we have updated
+1. Added github link in the documentation (as promised).
+2. Added the library used in pdf drawings in documentation (as promised).
+3. Modified database logic so it uses variables instead of constants (as promised).
+4. Fixed drawing in pdfs to be synchornized with mouse movements (as we talked about it).
+5. Fixed search bug we found while presenting. 
+
+# How to I run the project?
+## Run the frontend
+Copy/paste the "dist" folder in C:\\xammp\\htdocks and run your apache server. Now navigate to localhost/dist/index.html.
+## Run the backend
+Copy/paste the "api" folder in C:\\xammp\\htdocks and run your apache server.
+## Run the database
+See above.

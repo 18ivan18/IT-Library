@@ -1,6 +1,12 @@
 export const redirect = (path = "/") => {
   if (path === getCurrentURL()) return;
-  // const baseUrl = window.location.origin;
+  // const baseUrl = window.location.href;
+  // const arr = baseUrl.split("/");
+  // console.log("last word", arr[arr.length - 2]);
+  // const lastWord = arr[arr.length - 2];
+  // if (lastWord !== "localhost:3001") {
+  //   window.location.href = "http://localhost:3001/";
+  // }
   history.pushState(null, "", path);
   window.dispatchEvent(new Event("navigate"));
   document.documentElement.scrollTop = 0;

@@ -6,6 +6,7 @@ import { Store } from "../utils/store/store";
 import { NavAnchor } from "../components/CustomElements/NavAnchor";
 import { getBooks, redirect } from "../utils/index.js";
 import { spinner } from "./Loading/Spinner.js";
+import { LOGIN, LOGOUT } from "../utils/store/reducers";
 
 const navBarTemplate = (context) => html`
   <style>
@@ -148,7 +149,7 @@ export class Navbar extends HTMLElement {
     decorateAsStateProperty(this, "auth", Store.getState().auth);
     decorateAsStateProperty(this, "isLoading", false);
     Store.subscribe((action) => {
-      if (action.type === "LOGIN" || action.type === "LOGOUT") {
+      if (action.type === LOGIN || action.type === LOGOUT) {
         this.auth = Store.getState().auth;
       }
     });
@@ -157,7 +158,7 @@ export class Navbar extends HTMLElement {
   handleLogout = (e) => {
     // TODO: fetch to the api
     Store.dispatch({
-      type: "LOGOUT",
+      type: LOGOUT,
     });
   };
 

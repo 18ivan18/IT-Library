@@ -47,7 +47,7 @@ module.exports = (env) => {
     devServer: {
       contentBase: path.join(__dirname, "dist"),
       compress: true,
-      port: env.PORT || 3000,
+      port: env.PORT || 3001,
       historyApiFallback: true,
     },
   };

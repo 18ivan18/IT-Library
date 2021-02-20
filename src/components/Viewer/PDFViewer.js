@@ -171,15 +171,7 @@ export class PDFViewer extends HTMLElement {
     nextTick(() => {
       this.isLoading = true;
       pdfjsLib
-        .getDocument(
-          parse(
-            "getPDFDocument",
-            new URLSearchParams({
-              id: this.id,
-              username: this.auth.user.username,
-            })
-          )
-        )
+        .getDocument(parse(`getPDFDocument/${this.id}`))
         .then((pdf) => {
           this.state.pdf = pdf;
           render(this);
@@ -239,7 +231,7 @@ export class PDFViewer extends HTMLElement {
 
   copyToClipboard = (e) => {
     this.isLoading = true;
-    fetch(parse("quote", new URLSearchParams({ id: this.id })))
+    fetch(parse(`quote/${this.id}`))
       .then((data) => data.json())
       .then((json) => {
         const aux = document.createElement("input");

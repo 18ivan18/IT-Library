@@ -11,7 +11,7 @@ import { Store } from "../utils/store/store";
 import { spinner } from "./Loading/Spinner";
 
 const printResourcesInfo = (arrOfBooks) =>
-  arrOfBooks.map(
+  (arrOfBooks || []).map(
     (book) =>
       html`
         <div class="card" @click=${() => redirect(`/books/${book.id}`)}>
@@ -418,7 +418,9 @@ const libraryTemplate = (context) => html`
       ${basicFormRender(context.handleSubmit)}
     </div>
   </div>
-  <div class="card-container">${printResourcesInfo(context.resources)}</div>
+  <div class="card-container">
+    ${console.log(context.resources)}${printResourcesInfo(context.resources)}
+  </div>
 `;
 
 export class Library extends HTMLElement {
@@ -450,7 +452,7 @@ export class Library extends HTMLElement {
     Store.dispatch({
       type: "SET_RESOURCES",
       payload: {
-        resources: [],
+        books: [],
       },
     });
   }
